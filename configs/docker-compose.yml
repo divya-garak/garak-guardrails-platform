@@ -1,0 +1,108 @@
+version: '3.8'
+
+services:
+  # Main NeMo Guardrails service with integrated guardrails
+  nemo-guardrails:
+    build:
+      context: .
+      dockerfile: Dockerfile.main
+    ports:
+      - "8000:8000"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - JAILBREAK_DETECTION_ENDPOINT=http://jailbreak-detection:1337
+      - FACTCHECK_ENDPOINT=http://factcheck-service:5000
+      - LLAMA_GUARD_ENDPOINT=http://llama-guard:8001
+    depends_on:
+      - jailbreak-detection
+      - factcheck-service
+      - llama-guard
+    volumes:
+      - ./comprehensive-config:/app/config
+      - ./logs:/app/logs
+    command: ["nemoguardrails", "server", "--config", "/app/config", "--port", "8000"]
+
+  # Jailbreak Detection Service (existing Dockerfile)
+  jailbreak-detection:
+    build:
+      context: ./nemoguardrails/library/jailbreak_detection
+      dockerfile: Dockerfile
+    ports:
+      - "1337:1337"
+    environment:
+      - JAILBREAK_CHECK_DEVICE=cpu
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:1337/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Fact Checking Service (existing Dockerfile)
+  factcheck-service:
+    build:
+      context: ./nemoguardrails/library/factchecking/align_score
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    environment:
+      - ALIGN_SCORE_DEVICE=cpu
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Llama Guard Service
+  llama-guard:
+    build:
+      context: .
+      dockerfile: Dockerfile.llamaguard
+    ports:
+      - "8001:8001"
+    environment:
+      - CUDA_VISIBLE_DEVICES=""
+      - MODEL_NAME=meta-llama/LlamaGuard-7b-hf
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 60s
+      timeout: 30s
+      retries: 3
+    volumes:
+      - llama_guard_models:/root/.cache/huggingface
+
+  # Sensitive Data Detection Service
+  sensitive-data-detection:
+    build:
+      context: .
+      dockerfile: Dockerfile.presidio
+    ports:
+      - "5001:5001"
+    environment:
+      - PRESIDIO_ANALYZER_ENGINE_PORT=5001
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Content Safety Service (integrated with sensitive data)
+  content-safety:
+    build:
+      context: .
+      dockerfile: Dockerfile.content_safety
+    ports:
+      - "5002:5002"
+    environment:
+      - CONTENT_SAFETY_PORT=5002
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5002/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  llama_guard_models:
+
+networks:
+  default:
+    name: nemo-guardrails-network

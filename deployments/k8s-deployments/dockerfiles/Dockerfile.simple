@@ -1,0 +1,63 @@
+# Simple NeMo Guardrails Service
+FROM python:3.10-slim
+
+# Install basic dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    git \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set working directory
+WORKDIR /app
+
+# Install minimal Python dependencies for basic service
+RUN pip install --no-cache-dir \
+    fastapi==0.104.1 \
+    uvicorn==0.24.0 \
+    pydantic==2.5.0 \
+    requests==2.31.0
+
+# Create a simple health endpoint
+RUN echo 'from fastapi import FastAPI\n\
+app = FastAPI(title="NeMo Guardrails", version="0.1.0")\n\
+\n\
+@app.get("/")\n\
+async def root():\n\
+    return {"status": "healthy", "service": "nemo-guardrails", "version": "0.1.0"}\n\
+\n\
+@app.get("/health")\n\
+async def health():\n\
+    return {"status": "healthy", "timestamp": "2025-08-01"}\n\
+\n\
+@app.post("/v1/chat/completions")\n\
+async def chat_completions(request: dict):\n\
+    return {\n\
+        "id": "chatcmpl-test", \n\
+        "object": "chat.completion",\n\
+        "created": 1690000000,\n\
+        "model": "nemo-guardrails",\n\
+        "choices": [{\n\
+            "index": 0,\n\
+            "message": {\n\
+                "role": "assistant",\n\
+                "content": "This is a basic NeMo Guardrails response. Full implementation coming soon."\n\
+            },\n\
+            "finish_reason": "stop"\n\
+        }],\n\
+        "usage": {"prompt_tokens": 10, "completion_tokens": 20, "total_tokens": 30}\n\
+    }\n\
+\n\
+if __name__ == "__main__":\n\
+    import uvicorn\n\
+    uvicorn.run(app, host="0.0.0.0", port=8000)' > main.py
+
+# Expose port
+EXPOSE 8000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+# Run the application
+CMD ["python", "main.py"]

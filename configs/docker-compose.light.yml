@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+  # Main NeMo Guardrails service with library-based guardrails
+  nemo-guardrails:
+    build:
+      context: .
+      dockerfile: Dockerfile.main
+    ports:
+      - "8000:8000"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    volumes:
+      - ./comprehensive-config:/app/config
+      - ./logs:/app/logs
+    command: ["nemoguardrails", "server", "--config", "/app/config", "--port", "8000"]
+
+  # Jailbreak Detection Service (lightweight - heuristics only)
+  jailbreak-detection:
+    build:
+      context: ./nemoguardrails/library/jailbreak_detection
+      dockerfile: Dockerfile
+    ports:
+      - "1337:1337"
+    environment:
+      - JAILBREAK_CHECK_DEVICE=cpu
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:1337/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Sensitive Data Detection Service
+  sensitive-data-detection:
+    build:
+      context: .
+      dockerfile: Dockerfile.presidio
+    ports:
+      - "5001:5001"
+    environment:
+      - PRESIDIO_ANALYZER_ENGINE_PORT=5001
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Content Safety Service
+  content-safety:
+    build:
+      context: .
+      dockerfile: Dockerfile.content_safety
+    ports:
+      - "5002:5002"
+    environment:
+      - CONTENT_SAFETY_PORT=5002
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5002/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  default:
+    name: nemo-guardrails-network
