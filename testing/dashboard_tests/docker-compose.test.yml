@@ -1,0 +1,149 @@
+version: '3.8'
+
+services:
+  # Main NeMo Guardrails service
+  nemo-main:
+    image: nemoguardrails:latest
+    ports:
+      - "8000:8000"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-dummy_key}
+      - NVIDIA_API_KEY=${NVIDIA_API_KEY:-dummy_key}
+    volumes:
+      - ../comprehensive-config:/config
+    command: nemoguardrails server --config /config
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - guardrails-test
+
+  # Comprehensive test service (different port)
+  nemo-comprehensive:
+    image: nemoguardrails:latest
+    ports:
+      - "8004:8000"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-dummy_key}
+      - NVIDIA_API_KEY=${NVIDIA_API_KEY:-dummy_key}
+    volumes:
+      - ../dashboard_configs/balanced-config:/config
+    command: nemoguardrails server --config /config
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - guardrails-test
+
+  # Jailbreak detection service
+  jailbreak-service:
+    build:
+      context: ..
+      dockerfile: nemoguardrails/library/jailbreak_detection/Dockerfile
+    ports:
+      - "1337:8000"
+    environment:
+      - SERVICE_TYPE=jailbreak
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - guardrails-test
+
+  # Presidio sensitive data detection
+  presidio-service:
+    build:
+      context: ..
+      dockerfile: Dockerfile.presidio
+    ports:
+      - "5001:5001"
+    environment:
+      - LOG_LEVEL=INFO
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - guardrails-test
+
+  # Content safety service
+  content-safety:
+    build:
+      context: ..
+      dockerfile: Dockerfile.content_safety
+    ports:
+      - "5002:5002"
+    environment:
+      - SERVICE_TYPE=content_safety
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5002/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - guardrails-test
+
+  # LlamaGuard service
+  llama-guard:
+    build:
+      context: ..
+      dockerfile: Dockerfile.llamaguard
+    ports:
+      - "8001:8001"
+    environment:
+      - MODEL_NAME=meta-llama/LlamaGuard-7b
+      - HUGGING_FACE_HUB_TOKEN=${HUGGING_FACE_HUB_TOKEN:-dummy_token}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 60s
+      timeout: 30s
+      retries: 3
+    networks:
+      - guardrails-test
+
+  # Fact checking service (using align score Dockerfile)
+  factcheck-service:
+    build:
+      context: ..
+      dockerfile: nemoguardrails/library/factchecking/align_score/Dockerfile
+    ports:
+      - "5000:8000"
+    environment:
+      - SERVICE_TYPE=factcheck
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - guardrails-test
+
+  # Wait service to ensure all dependencies are ready
+  wait-for-services:
+    image: busybox:latest
+    depends_on:
+      - nemo-main
+      - nemo-comprehensive
+      - jailbreak-service
+      - presidio-service
+      - content-safety
+      - llama-guard
+      - factcheck-service
+    command: ["sh", "-c", "echo 'All services are up!'"]
+    networks:
+      - guardrails-test
+
+networks:
+  guardrails-test:
+    driver: bridge
+
+volumes:
+  test-data:
+    driver: local

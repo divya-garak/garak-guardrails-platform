@@ -1,0 +1,12 @@
+steps:
+  # Build a simple NeMo Guardrails service first
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/garak-shield/nemo-guardrails:simple', '-f', 'Dockerfile.simple', '.']
+    timeout: 300s
+
+# Store images in GCR
+images:
+  - 'gcr.io/garak-shield/nemo-guardrails:simple'
+
+options:
+  logging: CLOUD_LOGGING_ONLY

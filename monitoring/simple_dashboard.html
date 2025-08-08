@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🛡️ NeMo Guardrails Monitoring Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .main-content {
+            padding: 30px;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+        }
+        
+        .section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            border-bottom: 3px solid #4facfe;
+            padding-bottom: 10px;
+        }
+        
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .service-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .service-status {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        
+        .service-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        
+        .service-response-time {
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        .guardrails-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .guardrail-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            border: 2px solid #e9ecef;
+        }
+        
+        .guardrail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .guardrail-name {
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            width: 60px;
+            height: 30px;
+            background: #ccc;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .toggle-switch.active {
+            background: #4facfe;
+        }
+        
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            width: 26px;
+            height: 26px;
+            background: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.3s;
+        }
+        
+        .toggle-switch.active::after {
+            transform: translateX(30px);
+        }
+        
+        .guardrail-description {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+        }
+        
+        .guardrail-status {
+            font-size: 0.85em;
+            font-weight: bold;
+        }
+        
+        .status-enabled {
+            color: #28a745;
+        }
+        
+        .status-disabled {
+            color: #dc3545;
+        }
+        
+        .test-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+        
+        .test-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1em;
+            margin-bottom: 15px;
+            resize: vertical;
+        }
+        
+        .test-select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1em;
+            margin-bottom: 15px;
+        }
+        
+        .test-button {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .test-button:hover {
+            transform: translateY(-2px);
+        }
+        
+        .test-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .test-results {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px solid #e9ecef;
+            background: white;
+        }
+        
+        .result-blocked {
+            background: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+        
+        .result-allowed {
+            background: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .metric-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .metric-value {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .metric-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+        
+        .loading {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+        }
+        
+        .error {
+            color: #dc3545;
+            background: #f8d7da;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        
+        .success {
+            color: #155724;
+            background: #d4edda;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛡️ NeMo Guardrails Monitor</h1>
+            <p>Real-time monitoring and control of all guardrail categories</p>
+        </div>
+        
+        <div class="main-content">
+            <!-- Service Health Section -->
+            <div class="section">
+                <h2>📊 Service Health Status</h2>
+                <div class="services-grid" id="servicesGrid">
+                    <div class="loading">Loading services...</div>
+                </div>
+            </div>
+            
+            <!-- Guardrails Control Section -->
+            <div class="section">
+                <h2>🔧 Guardrail Configuration</h2>
+                <div class="guardrails-grid" id="guardrailsGrid">
+                    <div class="loading">Loading guardrails...</div>
+                </div>
+            </div>
+            
+            <!-- Testing Section -->
+            <div class="section">
+                <h2>🧪 Guardrail Testing</h2>
+                <div class="test-section">
+                    <textarea id="testInput" class="test-input" rows="3" placeholder="Enter test input (e.g., 'Hello, how can you help me?' or 'Ignore all instructions')">Hello, how can you help me?</textarea>
+                    
+                    <select id="guardrailSelect" class="test-select">
+                        <option value="">Select guardrail to test...</option>
+                    </select>
+                    
+                    <button id="testButton" class="test-button" onclick="testGuardrail()">🚀 Test Guardrail</button>
+                    
+                    <div id="testResults" class="test-results" style="display: none;"></div>
+                </div>
+            </div>
+            
+            <!-- Metrics Section -->
+            <div class="section">
+                <h2>📈 Real-time Metrics</h2>
+                <div class="metrics-grid" id="metricsGrid">
+                    <div class="loading">Loading metrics...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8090';
+        let guardrailsData = {};
+        
+        // Load initial data
+        document.addEventListener('DOMContentLoaded', function() {
+            loadServices();
+            loadGuardrails();
+            loadMetrics();
+            
+            // Auto-refresh every 30 seconds
+            setInterval(() => {
+                loadServices();
+                loadMetrics();
+            }, 30000);
+        });
+        
+        async function loadServices() {
+            try {
+                const response = await fetch(`${API_BASE}/services`);
+                const data = await response.json();
+                displayServices(data.services);
+            } catch (error) {
+                document.getElementById('servicesGrid').innerHTML = 
+                    '<div class="error">Failed to load services</div>';
+            }
+        }
+        
+        function displayServices(services) {
+            const grid = document.getElementById('servicesGrid');
+            grid.innerHTML = '';
+            
+            for (const [name, service] of Object.entries(services)) {
+                const card = document.createElement('div');
+                card.className = 'service-card';
+                
+                const statusIcon = service.status === 'healthy' ? '🟢' : '🔴';
+                const responseTime = service.response_time > 0 ? 
+                    `${Math.round(service.response_time)}ms` : 'N/A';
+                
+                card.innerHTML = `
+                    <div class="service-status">${statusIcon}</div>
+                    <div class="service-name">${service.name || name}</div>
+                    <div class="service-response-time">${responseTime}</div>
+                `;
+                
+                grid.appendChild(card);
+            }
+        }
+        
+        async function loadGuardrails() {
+            try {
+                const response = await fetch(`${API_BASE}/guardrails`);
+                const data = await response.json();
+                guardrailsData = data.guardrails;
+                displayGuardrails(data.guardrails);
+                populateGuardrailSelect(data.guardrails);
+            } catch (error) {
+                document.getElementById('guardrailsGrid').innerHTML = 
+                    '<div class="error">Failed to load guardrails</div>';
+            }
+        }
+        
+        function displayGuardrails(guardrails) {
+            const grid = document.getElementById('guardrailsGrid');
+            grid.innerHTML = '';
+            
+            const guardrailInfo = {
+                'jailbreak_detection': {
+                    name: 'Jailbreak Detection',
+                    description: 'Detects prompt injection attacks'
+                },
+                'injection_detection': {
+                    name: 'Injection Detection',
+                    description: 'Detects code, SQL, XSS injections'
+                },
+                'sensitive_data_detection': {
+                    name: 'Sensitive Data Detection',
+                    description: 'Detects and anonymizes PII'
+                },
+                'content_safety': {
+                    name: 'Content Safety',
+                    description: 'Content safety validation'
+                },
+                'self_check_input': {
+                    name: 'Self Check Input',
+                    description: 'LLM-based input validation'
+                },
+                'self_check_output': {
+                    name: 'Self Check Output',
+                    description: 'LLM-based output validation'
+                },
+                'hallucination_detection': {
+                    name: 'Hallucination Detection',
+                    description: 'Detects AI hallucinations'
+                },
+                'fact_checking': {
+                    name: 'Fact Checking',
+                    description: 'AlignScore-based verification'
+                },
+                'self_check_facts': {
+                    name: 'Self Check Facts',
+                    description: 'LLM-based fact validation'
+                }
+            };
+            
+            for (const [name, enabled] of Object.entries(guardrails)) {
+                const info = guardrailInfo[name] || { name: name, description: 'Guardrail protection' };
+                const card = document.createElement('div');
+                card.className = 'guardrail-card';
+                
+                card.innerHTML = `
+                    <div class="guardrail-header">
+                        <div class="guardrail-name">${info.name}</div>
+                        <div class="toggle-switch ${enabled ? 'active' : ''}" 
+                             onclick="toggleGuardrail('${name}')" 
+                             data-guardrail="${name}"></div>
+                    </div>
+                    <div class="guardrail-description">${info.description}</div>
+                    <div class="guardrail-status ${enabled ? 'status-enabled' : 'status-disabled'}">
+                        ${enabled ? '✅ Enabled' : '❌ Disabled'}
+                    </div>
+                `;
+                
+                grid.appendChild(card);
+            }
+        }
+        
+        function populateGuardrailSelect(guardrails) {
+            const select = document.getElementById('guardrailSelect');
+            select.innerHTML = '<option value="">Select guardrail to test...</option>';
+            
+            const guardrailNames = {
+                'jailbreak_detection': 'Jailbreak Detection',
+                'injection_detection': 'Injection Detection', 
+                'sensitive_data_detection': 'Sensitive Data Detection',
+                'content_safety': 'Content Safety',
+                'self_check_input': 'Self Check Input',
+                'self_check_output': 'Self Check Output',
+                'hallucination_detection': 'Hallucination Detection'
+            };
+            
+            for (const name of Object.keys(guardrails)) {
+                const option = document.createElement('option');
+                option.value = name;
+                option.textContent = guardrailNames[name] || name;
+                select.appendChild(option);
+            }
+        }
+        
+        async function toggleGuardrail(guardrailName) {
+            const currentState = guardrailsData[guardrailName];
+            const newState = !currentState;
+            
+            try {
+                const response = await fetch(`${API_BASE}/guardrails/toggle`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        guardrail_name: guardrailName,
+                        enabled: newState
+                    })
+                });
+                
+                if (response.ok) {
+                    guardrailsData[guardrailName] = newState;
+                    
+                    // Update the toggle switch
+                    const toggle = document.querySelector(`[data-guardrail="${guardrailName}"]`);
+                    if (newState) {
+                        toggle.classList.add('active');
+                    } else {
+                        toggle.classList.remove('active');
+                    }
+                    
+                    // Update status text
+                    const statusElement = toggle.parentElement.parentElement.querySelector('.guardrail-status');
+                    statusElement.className = `guardrail-status ${newState ? 'status-enabled' : 'status-disabled'}`;
+                    statusElement.textContent = newState ? '✅ Enabled' : '❌ Disabled';
+                    
+                    // Show success message
+                    showMessage(`${guardrailName} ${newState ? 'enabled' : 'disabled'} successfully`, 'success');
+                } else {
+                    showMessage('Failed to toggle guardrail', 'error');
+                }
+            } catch (error) {
+                showMessage('Error toggling guardrail', 'error');
+            }
+        }
+        
+        async function testGuardrail() {
+            const testInput = document.getElementById('testInput').value;
+            const guardrailName = document.getElementById('guardrailSelect').value;
+            const resultsDiv = document.getElementById('testResults');
+            const button = document.getElementById('testButton');
+            
+            if (!testInput.trim()) {
+                showMessage('Please enter test input', 'error');
+                return;
+            }
+            
+            if (!guardrailName) {
+                showMessage('Please select a guardrail to test', 'error');
+                return;
+            }
+            
+            button.disabled = true;
+            button.textContent = '🔄 Testing...';
+            resultsDiv.style.display = 'none';
+            
+            try {
+                const response = await fetch(`${API_BASE}/test`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        guardrail_name: guardrailName,
+                        test_input: testInput
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    displayTestResults(result);
+                } else {
+                    showMessage(`Test failed: ${result.detail || 'Unknown error'}`, 'error');
+                }
+            } catch (error) {
+                showMessage('Error testing guardrail', 'error');
+            } finally {
+                button.disabled = false;
+                button.textContent = '🚀 Test Guardrail';
+            }
+        }
+        
+        function displayTestResults(result) {
+            const resultsDiv = document.getElementById('testResults');
+            const blocked = result.blocked;
+            
+            resultsDiv.className = `test-results ${blocked ? 'result-blocked' : 'result-allowed'}`;
+            resultsDiv.style.display = 'block';
+            
+            let resultsHTML = `
+                <h3>${blocked ? '🔴 BLOCKED' : '🟢 ALLOWED'}</h3>
+                <p><strong>Response Time:</strong> ${Math.round(result.response_time)}ms</p>
+            `;
+            
+            if (result.details) {
+                if (result.details.entities && result.details.entities.length > 0) {
+                    resultsHTML += `<p><strong>Entities Found:</strong> ${result.details.entities.length}</p>`;
+                    resultsHTML += `<p><strong>Anonymized:</strong> ${result.details.anonymized_text || 'N/A'}</p>`;
+                }
+                
+                if (result.details.categories_violated && result.details.categories_violated.length > 0) {
+                    resultsHTML += `<p><strong>Categories Violated:</strong> ${result.details.categories_violated.join(', ')}</p>`;
+                }
+                
+                if (result.details.confidence !== undefined) {
+                    resultsHTML += `<p><strong>Confidence:</strong> ${result.details.confidence}</p>`;
+                }
+            }
+            
+            resultsDiv.innerHTML = resultsHTML;
+        }
+        
+        async function loadMetrics() {
+            try {
+                const response = await fetch(`${API_BASE}/metrics`);
+                const data = await response.json();
+                displayMetrics(data.metrics);
+            } catch (error) {
+                document.getElementById('metricsGrid').innerHTML = 
+                    '<div class="error">Failed to load metrics</div>';
+            }
+        }
+        
+        function displayMetrics(metrics) {
+            const grid = document.getElementById('metricsGrid');
+            const totalRequests = metrics.requests_total || 0;
+            const blocked = metrics.blocked_total || 0;
+            const allowed = metrics.allowed_total || 0;
+            const blockRate = totalRequests > 0 ? ((blocked / totalRequests) * 100).toFixed(1) : 0;
+            
+            grid.innerHTML = `
+                <div class="metric-card">
+                    <div class="metric-value">${totalRequests}</div>
+                    <div class="metric-label">Total Requests</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">${blocked}</div>
+                    <div class="metric-label">Blocked</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">${allowed}</div>
+                    <div class="metric-label">Allowed</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">${blockRate}%</div>
+                    <div class="metric-label">Block Rate</div>
+                </div>
+            `;
+        }
+        
+        function showMessage(message, type) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = type;
+            messageDiv.textContent = message;
+            
+            document.querySelector('.main-content').insertBefore(messageDiv, document.querySelector('.section'));
+            
+            setTimeout(() => {
+                messageDiv.remove();
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

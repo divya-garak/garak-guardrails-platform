@@ -1,0 +1,18 @@
+models:
+  - type: main
+    engine: openai
+    model: gpt-3.5-turbo
+
+instructions:
+  - type: general
+    content: |
+      You are a helpful AI assistant. Be concise and helpful.
+
+rails:
+  input:
+    flows:
+      - self check input
+      - jailbreak detection heuristics
+  output:
+    flows:
+      - self check output

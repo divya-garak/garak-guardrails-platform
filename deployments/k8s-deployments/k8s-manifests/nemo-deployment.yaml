@@ -1,0 +1,131 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nemo-guardrails-secure
+  namespace: default
+  labels:
+    app: nemo-guardrails-secure
+    version: v1.0.0
+    tier: production
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nemo-guardrails-secure
+  template:
+    metadata:
+      labels:
+        app: nemo-guardrails-secure
+        version: v1.0.0
+        tier: production
+    spec:
+      containers:
+      - name: nemo-guardrails
+        image: us-central1-docker.pkg.dev/garak-shield/nemo-repo/nemo-guardrails-secure:latest
+        ports:
+        - containerPort: 8000
+          name: http
+        env:
+        - name: OPENAI_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: llm-secrets
+              key: openai-api-key
+        - name: NEMO_GUARDRAILS_SERVER_ENABLE_CORS
+          value: "true"
+        - name: NEMO_GUARDRAILS_SERVER_ALLOWED_ORIGINS
+          value: "https://dashboard.garaksecurity.com,https://api.garaksecurity.com"
+        - name: DATASTORE_TYPE
+          value: "redis"
+        - name: REDIS_HOST
+          value: "redis-service"
+        - name: REDIS_PORT
+          value: "6379"
+        - name: REDIS_DB
+          value: "0"
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: redis-secrets
+              key: password
+        - name: ENABLE_SECURITY_MONITORING
+          value: "true"
+        - name: MAX_THREAD_HISTORY
+          value: "100"
+        - name: THREAD_TTL_HOURS
+          value: "24"
+        resources:
+          requests:
+            cpu: 500m
+            memory: 2Gi
+          limits:
+            cpu: 2000m
+            memory: 4Gi
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 120
+          periodSeconds: 30
+          timeoutSeconds: 10
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 2
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1000
+          readOnlyRootFilesystem: false
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nemo-guardrails-secure-service
+  namespace: default
+  labels:
+    app: nemo-guardrails-secure
+spec:
+  selector:
+    app: nemo-guardrails-secure
+  ports:
+  - name: http
+    port: 80
+    targetPort: 8000
+    protocol: TCP
+  type: LoadBalancer
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: nemo-guardrails-secure-hpa
+  namespace: default
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: nemo-guardrails-secure
+  minReplicas: 2
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80

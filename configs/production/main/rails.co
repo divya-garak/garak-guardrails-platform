@@ -1,0 +1,2 @@
+# Use NeMo Guardrails library flows for security
+# self check input, self check output, and jailbreak detection heuristics are loaded from library

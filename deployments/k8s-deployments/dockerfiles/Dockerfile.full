@@ -1,0 +1,64 @@
+# Production NeMo Guardrails Dockerfile with comprehensive security features
+FROM python:3.11-slim
+
+LABEL maintainer="NeMo Guardrails Team"
+LABEL description="Production NeMo Guardrails with enhanced security guardrails"
+
+# Set environment variables for container optimization
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    HF_HOME=/tmp/huggingface \
+    TRANSFORMERS_CACHE=/tmp/transformers \
+    XDG_CACHE_HOME=/tmp/cache
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    git \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create app directory
+WORKDIR /app
+
+# Copy requirements and install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Install additional dependencies for production security features
+RUN pip install --no-cache-dir \
+    langchain-openai \
+    redis \
+    fastapi \
+    uvicorn[standard] \
+    openai \
+    requests
+
+# Copy the entire codebase
+COPY . .
+
+# Install NeMo Guardrails in development mode
+RUN pip install -e .
+
+# Copy server configurations
+COPY server_configs /app/server_configs
+
+# Create cache directories with proper permissions
+RUN mkdir -p /tmp/huggingface /tmp/transformers /tmp/cache && \
+    chmod -R 777 /tmp/huggingface /tmp/transformers /tmp/cache
+
+# Expose port
+EXPOSE 8000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+# Run the server
+CMD ["python", "-m", "nemoguardrails.server.api", \
+     "--config", "/app/server_configs", \
+     "--host", "0.0.0.0", \
+     "--port", "8000", \
+     "--disable-chat-ui"]

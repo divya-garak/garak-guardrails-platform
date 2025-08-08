@@ -1,0 +1,48 @@
+# Main NeMo Guardrails Dockerfile with integrated guardrails
+FROM python:3.10-slim
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    git \
+    gcc \
+    g++ \
+    python3-dev \
+    wget \
+    curl \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set working directory
+WORKDIR /app
+
+# Copy requirements and install dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
+
+# Install additional dependencies for integrated guardrails
+RUN pip install --no-cache-dir \
+    yara-python \
+    presidio-analyzer \
+    presidio-anonymizer \
+    spacy \
+    && python -m spacy download en_core_web_sm
+
+# Copy the entire codebase
+COPY . .
+
+# Install NeMo Guardrails in development mode
+RUN pip install -e .
+
+# Create directories for logs and config
+RUN mkdir -p /app/logs /app/config
+
+# Expose port
+EXPOSE 8000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+# Default command
+CMD ["nemoguardrails", "server", "--config", "/app/config", "--port", "8000"]
