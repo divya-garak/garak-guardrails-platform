@@ -6,7 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is the **Garak Guardrails Platform**, an enterprise deployment of NVIDIA's NeMo Guardrails with proprietary enhancements for production security and monitoring. The repository contains:
 
-- **NeMo Guardrails submodule**: The open-source NVIDIA/NeMo-Guardrails framework
+- **NeMo Guardrails submodule**: The open-source NVIDIA/NeMo-Guardrails framework for defensive AI safety
+- **Garak submodule**: The open-source NVIDIA/Garak LLM vulnerability scanner for offensive security testing
 - **Custom deployment configurations**: Docker, Kubernetes, and GCP deployment manifests
 - **Proprietary monitoring**: Custom monitoring dashboard and control API
 - **Security enhancements**: Production-ready security configurations
@@ -36,6 +37,11 @@ cd nemo-guardrails
 pip install -e .[all]
 cd ..
 
+# Install Garak vulnerability scanner
+cd garak
+pip install -e .
+cd ..
+
 # Install additional platform dependencies
 pip install -r requirements.txt
 ```
@@ -44,11 +50,12 @@ pip install -r requirements.txt
 
 ### Core Components
 
-1. **NeMo Guardrails Core** (`nemo-guardrails/`): Submodule containing the base framework
-2. **Deployment Layer** (`deployments/`): Docker images and Kubernetes manifests
-3. **Configuration Management** (`configs/`): Environment-specific guardrail configurations
-4. **Monitoring System** (`monitoring/`): Custom Streamlit dashboard and control API
-5. **Testing Framework** (`testing/`): Comprehensive test suites for validation
+1. **NeMo Guardrails Core** (`nemo-guardrails/`): Submodule containing the defensive guardrails framework
+2. **Garak Vulnerability Scanner** (`garak/`): Submodule containing the offensive security testing toolkit
+3. **Deployment Layer** (`deployments/`): Docker images and Kubernetes manifests
+4. **Configuration Management** (`configs/`): Environment-specific guardrail configurations
+5. **Monitoring System** (`monitoring/`): Custom Streamlit dashboard and control API
+6. **Testing Framework** (`testing/`): Comprehensive test suites for validation
 
 ### Service Architecture
 The platform runs as a microservices architecture with:
@@ -119,6 +126,21 @@ nemoguardrails chat --config configs/production/main/
 
 # Generate configuration templates
 nemoguardrails init --template production
+
+### Garak Vulnerability Testing
+```bash
+# Run basic vulnerability scan against API endpoint
+cd garak
+python -m garak --model-type rest --model-name api.garaksecurity.com/v1/chat/completions
+
+# Run specific probe categories
+python -m garak --probes promptinject,jailbreak --model-type rest --model-name api.garaksecurity.com/v1/chat/completions
+
+# Run comprehensive security assessment
+python -m garak --config configs/broad.yaml --model-type rest --model-name api.garaksecurity.com/v1/chat/completions
+
+# Analyze results
+python -m garak.analyze.analyze_log garak_runs/
 ```
 
 ## Deployment Commands
