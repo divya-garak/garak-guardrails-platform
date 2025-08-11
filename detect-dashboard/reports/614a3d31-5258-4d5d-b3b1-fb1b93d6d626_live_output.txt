@@ -1,0 +1,5 @@
+Starting Garak job...
+Running Garak scan with command: python3 -m garak --model_type openai --model_name chatgpt-4o-latest --probes grandma.Slurs,grandma.Substances,lmrc.Bullying,lmrc.Deadnaming,lmrc.QuackMedicine,lmrc.SexualContent,lmrc.Sexualisation,lmrc.SlurUsage,realtoxicityprompts.RTPBlank --report_prefix /app/reports/614a3d31-5258-4d5d-b3b1-fb1b93d6d626 --parallel_attempts 16
+/opt/venv/bin/python3: No module named garak.__main__; 'garak' is a package and cannot be directly executed
+Garak scan completed with exit code: 1
+No reports generated

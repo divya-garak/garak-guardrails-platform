@@ -1,7 +1,0 @@
-Starting Garak job...
-Running Garak scan with command: python3 -m garak --model_type huggingface --model_name gpt2 --probes encoding.InjectBase64 --generations 1 --report_prefix /Users/divyachitimalla/garak/dashboard/reports/60b1dfa7-b341-4677-b56f-d23ad278ec8f --detector_options '{-a:test_mode}'
-garak LLM vulnerability scanner v0.12.0.pre1 ( https://github.com/NVIDIA/garak ) at 2025-07-29T09:38:26.260595
-📜 logging to /Users/divyachitimalla/.local/share/garak/garak.log
-Traceback (most recent call last):
-Garak scan completed with exit code: 1
-No reports generated

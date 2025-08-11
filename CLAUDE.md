@@ -60,11 +60,18 @@ pip install -r requirements.txt
 
 ### Service Architecture
 The platform runs as a microservices architecture with:
-- **Main NeMo Guardrails Service** (port 8000): Primary API endpoint
+- **Main NeMo Guardrails Service** (port 8000): Primary API endpoint for defensive guardrails
 - **Jailbreak Detection Service** (port 1337): Specialized jailbreak detection
 - **Content Safety Service** (port 5002): Content moderation
 - **Sensitive Data Detection Service** (port 5001): PII detection using Presidio
 - **LLaMA Guard Service** (port 8001): Additional content safety validation
+- **Detect Dashboard** (port 8080): Web interface for offensive security testing with Garak
+
+### Dual Security Architecture
+This platform uniquely combines:
+1. **Defensive Security** (NeMo Guardrails): Real-time protection during LLM interactions
+2. **Offensive Security** (Garak): Proactive vulnerability discovery and red-team testing
+3. **Integration Layer**: Custom dashboard that orchestrates both systems for comprehensive security evaluation
 
 ## Common Development Commands
 
@@ -264,22 +271,37 @@ python3 control_api.py
 
 ### Running the Detect Dashboard
 ```bash
-# Start the Garak security evaluation dashboard
+# Start the Garak security evaluation dashboard locally
 cd detect-dashboard
+export DISABLE_AUTH=true  # For development only
 python app.py
 # Access at http://localhost:8000
 
-# Or with authentication disabled (development)
-export DISABLE_AUTH=true
+# Or with full Firebase authentication
+cd detect-dashboard
+export FIREBASE_API_KEY="your-api-key"
+export FIREBASE_PROJECT_ID="your-project-id"
+# ... (set other Firebase env vars)
 python app.py
+
+# Run with Docker Compose (recommended)
+cd detect-dashboard
+docker-compose up -d
+# Access at http://localhost:8080
+
+# Check container health
+docker-compose ps
+curl http://localhost:8080/health
 ```
 
 ### Dashboard Features
 - Web interface for Garak security evaluations
-- BigQuery integration for report analysis
-- Firebase authentication support
-- Persistent storage with GCS FUSE
-- HTML/JSON/JSONL report generation
+- BigQuery integration for report analysis and long-term storage
+- Firebase authentication support with configurable bypass
+- Persistent storage with GCS FUSE for production deployments
+- HTML/JSON/JSONL report generation with live output streaming
+- SQLAlchemy-based data persistence with PostgreSQL support
+- Rate limiting and API security features
 
 ### GCS Persistence Setup
 ```bash
@@ -290,7 +312,47 @@ gsutil mb gs://garak-persistent-storage
 gcloud run deploy garak-dashboard \
   --add-volume=name=gcs-storage,type=cloud-storage,bucket=garak-persistent-storage \
   --add-volume-mount=volume=gcs-storage,mount-path=/mnt/gcs-storage \
-  --set-env-vars="DATA_DIR=/mnt/gcs-storage/data,REPORT_DIR=/mnt/gcs-storage/reports"
+  --set-env-vars="DATA_DIR=/mnt/gcs-storage/data,REPORT_DIR=/mnt/gcs-storage/reports" \
+  --memory=2Gi --cpu=1000m --timeout=3600s
+```
+
+## Docker Configuration Patterns
+
+### Critical Docker Setup for Garak Integration
+The detect-dashboard requires specific Docker configuration for Garak CLI to work properly:
+
+```dockerfile
+# In Dockerfile.production - Environment setup
+ENV PYTHONPATH=/app/garak:/app/detect-dashboard
+ENV HOME=/home/garak
+ENV GARAK_CONFIG_DIR=/home/garak/.config/garak
+
+# Directory permissions - CRITICAL
+RUN mkdir -p /home/garak/.config/garak && \
+    chown -R garak:garak /home/garak
+
+# Install Garak dependencies in builder stage
+RUN pip install --no-cache-dir -e /build/garak/
+```
+
+**Key Points:**
+- PYTHONPATH must include `/app/garak` for direct module access
+- Garak user needs write permissions to `/home/garak/.config/garak`
+- Use editable pip install in builder stage only
+- Runtime relies on PYTHONPATH for module resolution
+
+### Docker Compose Usage
+```bash
+# Standard workflow
+cd detect-dashboard
+docker-compose build    # Build with latest changes
+docker-compose up -d    # Start services
+docker-compose ps       # Check status
+docker-compose logs     # View logs
+
+# Troubleshooting
+docker-compose build --no-cache  # Full rebuild
+docker exec <container> python3 -m garak --help  # Test Garak CLI
 ```
 
 ## File Structure Patterns
@@ -359,6 +421,7 @@ python3 -m pytest testing/dashboard_tests/test_live*.py -v
 - **Memory issues**: NeMo Guardrails can be memory-intensive; monitor resource usage
 - **Submodule issues**: Ensure submodules are initialized: `git submodule update --init --recursive`
 - **Port conflicts**: Check for processes using required ports: `lsof -i :8000` (repeat for other ports)
+- **Garak CLI execution errors**: If getting "No module named garak.__main__" in Docker, ensure PYTHONPATH includes `/app/garak`
 
 ### Debug Commands
 ```bash
@@ -371,4 +434,19 @@ nemoguardrails validate --config configs/production/main/
 
 # Test individual guardrails
 nemoguardrails chat --config configs/production/main/ --verbose
+
+# Docker troubleshooting commands
+# Check container status and logs
+docker-compose ps
+docker-compose logs detect-dashboard
+
+# Test Garak CLI inside container
+docker exec <container-name> python3 -m garak --help
+
+# Check container environment
+docker exec <container-name> env | grep PYTHONPATH
+docker exec <container-name> ls -la /app/garak/
+
+# Rebuild containers with no cache
+docker-compose build --no-cache
 ```
