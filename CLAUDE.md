@@ -56,6 +56,7 @@ pip install -r requirements.txt
 4. **Configuration Management** (`configs/`): Environment-specific guardrail configurations
 5. **Monitoring System** (`monitoring/`): Custom Streamlit dashboard and control API
 6. **Testing Framework** (`testing/`): Comprehensive test suites for validation
+7. **Detect Dashboard** (`detect-dashboard/`): Web interface for Garak security evaluations with BigQuery integration
 
 ### Service Architecture
 The platform runs as a microservices architecture with:
@@ -66,6 +67,21 @@ The platform runs as a microservices architecture with:
 - **LLaMA Guard Service** (port 8001): Additional content safety validation
 
 ## Common Development Commands
+
+### Quick Validation Commands
+```bash
+# Validate all configurations
+for config in configs/*/main/; do
+  echo "Validating $config"
+  nemoguardrails validate --config "$config"
+done
+
+# Check service health
+curl http://localhost:8000/health
+curl http://localhost:1337/health
+curl http://localhost:5001/health
+curl http://localhost:5002/health
+```
 
 ### Running Locally
 ```bash
@@ -96,6 +112,12 @@ python3 run_local_tests.py
 
 # Run GCP deployment tests (requires GCP access)
 python3 run_gcp_tests.py
+
+# Run tests with specific URL
+python3 run_tests_with_url.py http://localhost:8000
+
+# Run comprehensive test suite
+python3 test_comprehensive.py
 ```
 
 ### NeMo Guardrails Development
@@ -126,6 +148,7 @@ nemoguardrails chat --config configs/production/main/
 
 # Generate configuration templates
 nemoguardrails init --template production
+```
 
 ### Garak Vulnerability Testing
 ```bash
@@ -141,6 +164,9 @@ python -m garak --config configs/broad.yaml --model-type rest --model-name api.g
 
 # Analyze results
 python -m garak.analyze.analyze_log garak_runs/
+
+# Test against local NeMo Guardrails deployment
+python -m garak --model-type rest --model-name http://localhost:8000/v1/chat/completions
 ```
 
 ## Deployment Commands
@@ -152,6 +178,15 @@ python -m garak.analyze.analyze_log garak_runs/
 
 # Deploy with full monitoring
 docker-compose up -d
+
+# Deploy specific configuration
+docker-compose -f docker-compose.yml up -d
+
+# View running containers
+docker-compose ps
+
+# Stop all services
+docker-compose down
 ```
 
 ### Production Deployment
@@ -225,6 +260,39 @@ python3 control_api.py
 - Guardrail testing interface
 - Metrics and analytics
 
+## Detect Dashboard (Garak Interface)
+
+### Running the Detect Dashboard
+```bash
+# Start the Garak security evaluation dashboard
+cd detect-dashboard
+python app.py
+# Access at http://localhost:8000
+
+# Or with authentication disabled (development)
+export DISABLE_AUTH=true
+python app.py
+```
+
+### Dashboard Features
+- Web interface for Garak security evaluations
+- BigQuery integration for report analysis
+- Firebase authentication support
+- Persistent storage with GCS FUSE
+- HTML/JSON/JSONL report generation
+
+### GCS Persistence Setup
+```bash
+# Create GCS bucket for persistent storage
+gsutil mb gs://garak-persistent-storage
+
+# Deploy with GCS FUSE mounting
+gcloud run deploy garak-dashboard \
+  --add-volume=name=gcs-storage,type=cloud-storage,bucket=garak-persistent-storage \
+  --add-volume-mount=volume=gcs-storage,mount-path=/mnt/gcs-storage \
+  --set-env-vars="DATA_DIR=/mnt/gcs-storage/data,REPORT_DIR=/mnt/gcs-storage/reports"
+```
+
 ## File Structure Patterns
 
 ### Adding New Guardrails
@@ -232,6 +300,7 @@ python3 control_api.py
 2. Add configuration in `configs/production/main/config.yml`
 3. Add tests in `testing/dashboard_tests/`
 4. Update monitoring dashboard categories in `monitoring/app.py`
+5. Update relevant test JSON files in `testing/dashboard_tests/test_*.json`
 
 ### Adding New Services
 1. Create Dockerfile in `deployments/dockerfiles/`
@@ -254,6 +323,25 @@ Located in `testing/dashboard_tests/`, these test the full stack:
 - Real failures vs. service unavailability are distinguished
 - Use `run_all_tests.py` for comprehensive testing
 
+### Test JSON Payloads
+The `testing/dashboard_tests/` directory contains pre-configured test payloads:
+- `test_basic_chat.json`: Standard chat interaction
+- `test_jailbreak.json`: Jailbreak attempt detection
+- `test_harmful.json`: Harmful content detection
+- `test_streaming.json`: Streaming response testing
+
+### Running Specific Test Categories
+```bash
+# Security-focused tests
+python3 -m pytest testing/dashboard_tests/test_*security*.py -v
+
+# GCP deployment tests
+python3 -m pytest testing/dashboard_tests/test_gcp*.py -v
+
+# Live deployment validation
+python3 -m pytest testing/dashboard_tests/test_live*.py -v
+```
+
 ## Security Considerations
 
 - **No secrets in code**: Use `.env` files or Kubernetes secrets
@@ -269,6 +357,8 @@ Located in `testing/dashboard_tests/`, these test the full stack:
 - **Configuration errors**: Validate YAML syntax and required fields
 - **Permission errors**: Ensure proper file permissions for config files
 - **Memory issues**: NeMo Guardrails can be memory-intensive; monitor resource usage
+- **Submodule issues**: Ensure submodules are initialized: `git submodule update --init --recursive`
+- **Port conflicts**: Check for processes using required ports: `lsof -i :8000` (repeat for other ports)
 
 ### Debug Commands
 ```bash

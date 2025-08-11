@@ -4,7 +4,7 @@ services:
   garak-dashboard:
     build:
       context: ..
-      dockerfile: dashboard/Dockerfile.production
+      dockerfile: detect-dashboard/Dockerfile.production
     ports:
       - "8080:8080"
     environment:

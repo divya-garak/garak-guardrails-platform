@@ -48,7 +48,7 @@ except Exception as e:
 # Set default values
 export PORT=${PORT:-8080}
 export FLASK_ENV=${FLASK_ENV:-production}
-export PYTHONPATH=${PYTHONPATH:-/app}
+export PYTHONPATH=${PYTHONPATH:-/app/detect-dashboard}
 
 log "Port: $PORT"
 log "Flask Environment: $FLASK_ENV"
@@ -131,9 +131,9 @@ log "  - Secret Key: $([ -n "$SECRET_KEY" ] && echo "Set" || echo "Not set")"
 log "Validating application configuration..."
 if ! python3 -c "
 import sys
-sys.path.insert(0, '/app')
+sys.path.insert(0, '/app/detect-dashboard')
 try:
-    from dashboard import auth
+    import auth
     print('Import test successful')
 except Exception as e:
     print(f'Import test failed: {e}')
