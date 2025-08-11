@@ -20,7 +20,6 @@ ENV PATH="/root/.cargo/bin:${PATH}"
 
 # Copy requirements and install Python dependencies
 COPY detect-dashboard/requirements.txt /build/detect-dashboard/
-COPY garak/pyproject.toml /build/pyproject.toml
 COPY README.md /build/
 COPY garak /build/garak/
 
@@ -30,7 +29,7 @@ ENV PATH="/opt/venv/bin:$PATH"
 
 # Install dependencies
 RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir -e /build/ && \
+    pip install --no-cache-dir -e /build/garak/ && \
     pip install --no-cache-dir -r /build/detect-dashboard/requirements.txt && \
     pip install --no-cache-dir gunicorn google-cloud-secret-manager
 
@@ -56,7 +55,6 @@ ENV PATH="/opt/venv/bin:$PATH"
 # Copy application files
 COPY detect-dashboard /app/detect-dashboard/
 COPY garak /app/garak/
-COPY garak/pyproject.toml /app/pyproject.toml
 COPY README.md /app/
 
 # Copy entrypoint script
@@ -65,16 +63,18 @@ RUN chmod +x /app/entrypoint.sh
 
 # Set environment variables for production
 ENV PYTHONUNBUFFERED=1
-ENV PYTHONPATH=/app/detect-dashboard
+ENV PYTHONPATH=/app/garak:/app/detect-dashboard
 ENV FLASK_APP=app.py
 ENV DATA_DIR=/app/data
 ENV REPORT_DIR=/app/reports
 ENV DOCKER_ENV=true
 ENV PORT=8080
+ENV HOME=/home/garak
+ENV GARAK_CONFIG_DIR=/home/garak/.config/garak
 
 # Create necessary directories with proper permissions
-RUN mkdir -p /app/data /app/reports /tmp/garak && \
-    chown -R garak:garak /app /tmp/garak
+RUN mkdir -p /app/data /app/reports /tmp/garak /home/garak/.config/garak && \
+    chown -R garak:garak /app /tmp/garak /home/garak
 
 # Expose port (Cloud Run will override this)
 EXPOSE 8080
