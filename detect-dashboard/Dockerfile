@@ -29,7 +29,7 @@ RUN mkdir -p /home/garak/.config/garak && \
     chmod -R 755 /home/garak
 
 # Create directory structure
-RUN mkdir -p /app/dashboard /app/garak /app/reports /app/data
+RUN mkdir -p /app/detect-dashboard /app/garak /app/reports /app/data
 
 # Copy and install Garak first
 COPY garak /app/garak/
@@ -46,13 +46,13 @@ RUN pip install --no-cache-dir google-generativeai
 RUN python3 -c "import nltk; nltk.download('words', quiet=True, download_dir='/usr/local/share/nltk_data'); nltk.download('punkt', quiet=True, download_dir='/usr/local/share/nltk_data'); nltk.download('stopwords', quiet=True, download_dir='/usr/local/share/nltk_data')"
 
 # Install Flask & dashboard deps, then explicitly install Gunicorn
-COPY dashboard/requirements.txt /app/dashboard/
-RUN pip install --no-cache-dir -r /app/dashboard/requirements.txt \
+COPY detect-dashboard/requirements.txt /app/detect-dashboard/
+RUN pip install --no-cache-dir -r /app/detect-dashboard/requirements.txt \
     && pip install --no-cache-dir gunicorn
 
 
 # Copy dashboard application files
-COPY dashboard /app/dashboard/
+COPY detect-dashboard /app/detect-dashboard/
 
 # Test garak installation and basic functionality
 RUN python3 -c "import garak; print('Garak imported successfully')"
@@ -60,8 +60,8 @@ RUN python3 -m garak --help > /dev/null && echo "Garak CLI working"
 
 # Set environment variables
 ENV PYTHONUNBUFFERED=1
-ENV FLASK_APP=/app/dashboard/app.py
-ENV PYTHONPATH=/app:/app/dashboard
+ENV FLASK_APP=/app/detect-dashboard/app.py
+ENV PYTHONPATH=/app:/app/detect-dashboard
 ENV DATA_DIR=/app/data
 ENV REPORT_DIR=/app/reports
 ENV HOME=/home/garak
@@ -90,7 +90,7 @@ RUN python3 -c "import garak; print('Garak working as garak user')"
 RUN python3 -m garak --help > /dev/null && echo "Garak CLI working as garak user"
 
 # Set working directory to dashboard
-WORKDIR /app/dashboard
+WORKDIR /app/detect-dashboard
 
 # Use exec form to make Gunicorn the main process (PID 1)
 # The PORT environment variable is automatically set by Cloud Run.
