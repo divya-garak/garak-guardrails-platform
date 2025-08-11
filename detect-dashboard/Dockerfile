@@ -33,11 +33,10 @@ RUN mkdir -p /app/detect-dashboard /app/garak /app/reports /app/data
 
 # Copy and install Garak first
 COPY garak /app/garak/
-COPY pyproject.toml /app/
 COPY README.md /app/
 
-# Install Garak package
-RUN pip install --no-cache-dir -e /app/
+# Install Garak package from the garak subdirectory
+RUN pip install --no-cache-dir -e /app/garak/
 
 # Install optional dependencies that are commonly needed to prevent import errors
 RUN pip install --no-cache-dir google-generativeai
