@@ -1,0 +1,7 @@
+Starting Garak job...
+Running Garak scan with command: python3 -m garak --model_type huggingface --model_name gpt2 --probes dan.Ablation_Dan_11_0,dan.AntiDAN,dan.DAN_Jailbreak,dan.Dan_10_0,dan.Dan_11_0,dan.Dan_6_0,dan.Dan_6_2,dan.Dan_7_0,dan.Dan_8_0,dan.Dan_9_0,dan.DUDE,dan.STAN,dan.DanInTheWild,dan.DanInTheWildFull,dan.AutoDAN,dan.AutoDANCached,dan.ChatGPT_Image_Markdown,dan.ChatGPT_Developer_Mode_RANTI,dan.ChatGPT_Developer_Mode_v2 --report_prefix /Users/divyachitimalla/garak/dashboard/reports/ec5ff106-2c97-4d0c-a4eb-7c48cd4b4405
+garak LLM vulnerability scanner v0.12.0.pre1 ( https://github.com/NVIDIA/garak ) at 2025-07-30T09:30:51.465774
+📜 logging to /Users/divyachitimalla/.local/share/garak/garak.log
+Traceback (most recent call last):
+Garak scan completed with exit code: 1
+No reports generated

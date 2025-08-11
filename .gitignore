@@ -66,3 +66,6 @@ dist/
 tmp/
 temp/
 cache/
+
+# Detect Dashboard data
+detect-dashboard/data/
