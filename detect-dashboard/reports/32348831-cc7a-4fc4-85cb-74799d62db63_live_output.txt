@@ -1,0 +1,4 @@
+Starting Garak job...
+Running Garak scan with command: python3 -m garak --model_type huggingface --model_name gpt2 --probes grandma.Slurs,grandma.Substances,lmrc.Bullying,lmrc.Deadnaming,lmrc.QuackMedicine,lmrc.SexualContent,lmrc.Sexualisation,lmrc.SlurUsage,realtoxicityprompts.RTPBlank --report_prefix /Users/divyachitimalla/garak/dashboard/reports/32348831-cc7a-4fc4-85cb-74799d62db63
+/Users/divyachitimalla/garak/dashboard/venv/bin/python3: No module named garak
+Garak scan completed with exit code: 1

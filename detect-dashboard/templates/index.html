@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Garak LLM Evaluation Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .card-header {
+            background-color: #f8f9fa;
+            border-bottom: none;
+            padding: 1rem 1.25rem;
+        }
+        .card-title {
+            margin-bottom: 0;
+            font-weight: 600;
+            color: #333;
+        }
+        .form-control, .form-select {
+            border-radius: 8px;
+        }
+        .btn-primary {
+            background-color: #0d6efd;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+        }
+        .btn-primary:hover {
+            background-color: #0b5ed7;
+        }
+        .category-switch {
+            margin: 10px 0;
+        }
+        .scenarios-badge {
+            background-color: #e9ecef;
+            color: #495057;
+            font-weight: normal;
+        }
+        .nav-pills .nav-link.active {
+            background-color: #0d6efd;
+        }
+        .nav-pills .nav-link {
+            color: #495057;
+        }
+        .form-check-input:checked {
+            background-color: #0d6efd;
+            border-color: #0d6efd;
+        }
+        #loading {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            z-index: 1000;
+            text-align: center;
+            padding-top: 20%;
+        }
+    </style>
+</head>
+<body>
+    <div id="loading">
+        <div class="spinner-border text-primary" role="status"></div>
+        <div class="mt-2">Starting evaluation job...</div>
+    </div>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="bi bi-shield-lock-fill me-2"></i>
+                Garak LLM Evaluation Dashboard
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/jobs">Jobs</a>
+                    </li>
+                    {% if user_email %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-person-circle me-1"></i>{{ user_email }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="#" id="logout-button">
+                                <i class="bi bi-box-arrow-right me-2"></i>Logout
+                            </a></li>
+                        </ul>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container my-4">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="text-center mb-4">Create Evaluation</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Model Configuration -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="card-title">
+                            <i class="bi bi-cpu me-2"></i>Model
+                        </h5>
+                        <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip" title="Model settings help">
+                            <i class="bi bi-question-circle"></i>
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <ul class="nav nav-pills mb-3" id="modelTypePills" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="supported-tab" data-bs-toggle="pill" data-bs-target="#supported" type="button" role="tab" aria-controls="supported" aria-selected="true">Supported Models</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="custom-tab" data-bs-toggle="pill" data-bs-target="#custom" type="button" role="tab" aria-controls="custom" aria-selected="false">Custom Model</button>
+                            </li>
+                        </ul>
+                        <div class="tab-content" id="modelTypePillsContent">
+                            <div class="tab-pane fade show active" id="supported" role="tabpanel" aria-labelledby="supported-tab">
+                                <div class="mb-3">
+                                    <label for="modelHub" class="form-label">Model Hub</label>
+                                    <select class="form-select" id="modelHub">
+                                        <option value="" selected disabled>Select a model hub</option>
+                                        {% for key, name in generators.items() %}
+                                        <option value="{{ key }}">{{ name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="modelName" class="form-label">Model Name</label>
+                                    <select class="form-select" id="modelName" disabled>
+                                        <option value="" selected disabled>Select a model hub first</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="parallelAttempts" class="form-label">Parallel Attempts</label>
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" id="parallelAttempts" value="1" min="1" max="100">
+                                        <button class="btn btn-outline-secondary" type="button" data-bs-toggle="tooltip" title="Set the number of parallel requests for supported generators to accelerate the scan.">
+                                            <i class="bi bi-question-circle"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="custom" role="tabpanel" aria-labelledby="custom-tab">
+                                <div class="mb-3">
+                                    <label for="customModelHub" class="form-label">Model Hub</label>
+                                    <select class="form-select" id="customModelHub">
+                                        <option value="" selected disabled>Select a model hub</option>
+                                        {% for key, name in generators.items() %}
+                                        <option value="{{ key }}">{{ name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="customModelName" class="form-label">Model Name</label>
+                                    <input type="text" class="form-control" id="customModelName" placeholder="Enter model name">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3" id="apiKeySection">
+                            <label class="form-label">API Keys</label>
+                            <div class="input-group mb-2">
+                                <span class="input-group-text" style="width: 180px;">OpenAI API Key</span>
+                                <input type="password" class="form-control" id="openai_api_key" placeholder="sk-...">
+                            </div>
+                            <div class="input-group mb-2">
+                                <span class="input-group-text" style="width: 180px;">HuggingFace Token</span>
+                                <input type="password" class="form-control" id="hf_token" placeholder="hf_...">
+                            </div>
+                            <div class="input-group mb-2">
+                                <span class="input-group-text" style="width: 180px;">Replicate API Token</span>
+                                <input type="password" class="form-control" id="replicate_api_token" placeholder="r8_...">
+                            </div>
+                            <div class="input-group mb-2">
+                                <span class="input-group-text" style="width: 180px;">Mistral API Key</span>
+                                <input type="password" class="form-control" id="mistral_api_key" placeholder="...">
+                            </div>
+                            <div class="input-group mb-2">
+                                <span class="input-group-text" style="width: 180px;">Cohere API Key</span>
+                                <input type="password" class="form-control" id="cohere_api_key" placeholder="...">
+                            </div>
+                            <div class="input-group mb-2">
+                                <span class="input-group-text" style="width: 180px;">Anthropic API Key</span>
+                                <input type="password" class="form-control" id="anthropic_api_key" placeholder="sk-ant-...">                                
+                            </div>
+                            <div class="input-group mb-2">
+                                <span class="input-group-text" style="width: 180px;">Google API Key</span>
+                                <input type="password" class="form-control" id="google_api_key" placeholder="AIza...">                                
+                            </div>
+                            <div class="input-group mb-2">
+                                <span class="input-group-text" style="width: 180px;">REST API Key</span>
+                                <input type="password" class="form-control" id="rest_api_key" placeholder="Optional API key for REST endpoints">                                
+                            </div>
+                            <div class="form-text">Your API keys are only used for this evaluation and never stored.</div>
+                        </div>
+
+                        <!-- REST Endpoint Configuration (hidden by default) -->
+                        <div class="mb-3" id="restConfigSection" style="display: none;">
+                            <label class="form-label">
+                                <i class="bi bi-globe me-2"></i>REST Endpoint Configuration
+                            </label>
+                            <div class="mb-3">
+                                <label for="restUri" class="form-label">Endpoint URI</label>
+                                <input type="url" class="form-control" id="restUri" placeholder="https://api.example.com/v1/chat/completions">
+                                <div class="form-text">The REST API endpoint URL to test</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="restRequestTemplate" class="form-label">Request Template</label>
+                                <textarea class="form-control" id="restRequestTemplate" rows="4" placeholder='{"messages": [{"role": "user", "content": "$INPUT"}], "model": "gpt-3.5-turbo"}'>{"messages": [{"role": "user", "content": "$INPUT"}], "model": "gpt-3.5-turbo"}</textarea>
+                                <div class="form-text">JSON template for requests. Use $INPUT for prompt text, $KEY for API key</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="restHeaders" class="form-label">Custom Headers (JSON)</label>
+                                <textarea class="form-control" id="restHeaders" rows="3" placeholder='{"Authorization": "Bearer $KEY", "Content-Type": "application/json"}'></textarea>
+                                <div class="form-text">Additional HTTP headers as JSON. Use $KEY for API key substitution</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="restResponseField" class="form-label">Response JSON Field</label>
+                                <input type="text" class="form-control" id="restResponseField" placeholder="$.choices[0].message.content">
+                                <div class="form-text">JSONPath to extract response text (e.g., $.choices[0].message.content)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Evaluation Configuration -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="card-title">
+                            <i class="bi bi-graph-up me-2"></i>Evaluation
+                        </h5>
+                        <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip" title="Evaluation settings help">
+                            <i class="bi bi-question-circle"></i>
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-3">Choose test dimensions or click <i class="bi bi-gear-fill"></i> to pick scenarios</p>
+
+                        <ul class="nav nav-pills mb-3" id="evalTypePills" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="full-tab" data-bs-toggle="pill" data-bs-target="#full" type="button" role="tab" aria-controls="full" aria-selected="true">Full</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="lite-tab" data-bs-toggle="pill" data-bs-target="#lite" type="button" role="tab" aria-controls="lite" aria-selected="false">Lite</button>
+                            </li>
+                        </ul>
+
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="selectAll">
+                            <label class="form-check-label" for="selectAll">Select all</label>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Left column categories -->
+                                {% for category in ['dan', 'performance', 'ethics', 'privacy', 'security'] %}
+                                <div class="category-switch d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <label class="form-check-label" for="{{ category }}Switch">{{ category|capitalize }}</label>
+                                        <span class="badge scenarios-badge">{{ probe_categories[category]|length }} scenarios</span>
+                                    </div>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input category-toggle" type="checkbox" id="{{ category }}Switch" data-category="{{ category }}">
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <div class="col-md-6">
+                                <!-- Right column categories -->
+                                {% for category in ['hallucination', 'robustness', 'toxicity', 'stereotype'] %}
+                                <div class="category-switch d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <label class="form-check-label" for="{{ category }}Switch">{{ category|capitalize }}</label>
+                                        <span class="badge scenarios-badge">{{ probe_categories[category]|length }} scenarios</span>
+                                    </div>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input category-toggle" type="checkbox" id="{{ category }}Switch" data-category="{{ category }}">
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-12 text-center">
+                <button id="startEvaluation" class="btn btn-primary btn-lg px-5">
+                    <i class="bi bi-play-fill me-2"></i>Start Evaluation
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Result Modal -->
+    <div class="modal fade" id="resultModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Evaluation Started</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Your evaluation job has been started successfully.</p>
+                    <p>Job ID: <span id="jobId" class="fw-bold"></span></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <a href="#" id="viewJobBtn" class="btn btn-primary">View Job Status</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Initialize tooltips
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+
+        // Model hub selection changes
+        document.getElementById('modelHub').addEventListener('change', function() {
+            const hub = this.value;
+            const modelSelect = document.getElementById('modelName');
+            const restConfigSection = document.getElementById('restConfigSection');
+            
+            // Show/hide REST configuration section
+            if (hub === 'rest') {
+                restConfigSection.style.display = 'block';
+            } else {
+                restConfigSection.style.display = 'none';
+            }
+            
+            // In a real app, you would fetch models for the selected hub
+            modelSelect.innerHTML = '<option value="" selected disabled>Loading models...</option>';
+            modelSelect.disabled = false;
+            
+            // Simulate loading models (this would be an API call in a real app)
+            setTimeout(() => {
+                const modelOptions = getModelsForHub(hub);
+                modelSelect.innerHTML = modelOptions;
+            }, 500);
+        });
+
+        // Custom model hub selection changes
+        document.getElementById('customModelHub').addEventListener('change', function() {
+            const hub = this.value;
+            const restConfigSection = document.getElementById('restConfigSection');
+            
+            // Show/hide REST configuration section for custom tab too
+            if (hub === 'rest') {
+                restConfigSection.style.display = 'block';
+            } else if (document.getElementById('custom-tab').classList.contains('active')) {
+                restConfigSection.style.display = 'none';
+            }
+        });
+
+        // Function to get models for a hub (simulated)
+        function getModelsForHub(hub) {
+            const models = {
+                'openai': [
+                    // Chat models
+                    'chatgpt-4o-latest',
+                    'gpt-3.5-turbo', 'gpt-3.5-turbo-0125', 'gpt-3.5-turbo-1106', 'gpt-3.5-turbo-16k',
+                    'gpt-4', 'gpt-4-0125-preview', 'gpt-4-0314', 'gpt-4-0613',
+                    'gpt-4-1106-preview', 'gpt-4-1106-vision-preview',
+                    'gpt-4-32k', 'gpt-4-32k-0314', 'gpt-4-32k-0613',
+                    'gpt-4-turbo', 'gpt-4-turbo-2024-04-09', 'gpt-4-turbo-preview', 'gpt-4-vision-preview',
+                    'gpt-4.1', 'gpt-4.1-2025-06-13', 'gpt-4.1-preview', 'gpt-4.1-preview-2025-06-13',
+                    'gpt-4o', 'gpt-4o-2024-05-13', 'gpt-4o-2024-08-06', 'gpt-4o-2024-11-20',
+                    'gpt-4o-audio-preview', 'gpt-4o-audio-preview-2024-12-17', 'gpt-4o-audio-preview-2024-10-01',
+                    'gpt-4o-mini', 'gpt-4o-mini-2024-07-18',
+                    'gpt-4o-mini-audio-preview', 'gpt-4o-mini-audio-preview-2024-12-17',
+                    'gpt-4o-mini-realtime-preview', 'gpt-4o-mini-realtime-preview-2024-12-17',
+                    'gpt-4o-realtime-preview', 'gpt-4o-realtime-preview-2024-12-17', 'gpt-4o-realtime-preview-2024-10-01',
+                    'o1-mini', 'o1-mini-2024-09-12', 'o1-preview', 'o1-preview-2024-09-12',
+                    'o3', 'o3-2025-01-31', 'o3-mini', 'o3-mini-2025-01-31',
+                    // Completion models
+                    'gpt-3.5-turbo-instruct', 'davinci-002', 'babbage-002', 'davinci-instruct-beta'
+                ],
+                'huggingface': ['meta-llama/Llama-2-70b', 'mistralai/Mistral-7B-v0.1', 'tiiuae/falcon-40b'],
+                'mistral': ['mistral-large-latest', 'open-mistral-7b'],
+                'cohere': ['command', 'command-light', 'command-r', 'command-r-plus'],
+                'anthropic': [
+                    'claude-3-opus-20240229', 'claude-3-sonnet-20240229', 'claude-3-haiku-20240307',
+                    'claude-3-5-sonnet-20240620', 'claude-3-5-opus-20241003',
+                    'claude-3-opus', 'claude-3-sonnet', 'claude-3-haiku',
+                    'claude-2.1', 'claude-2.0', 'claude-instant-1.2'
+                ],
+                'ollama': ['llama2', 'mistral', 'gemma'],
+                'replicate': ['meta/meta-llama-3-8b-instruct', 'meta/llama-2-70b-chat', 'anthropic/claude-2'],
+                'gemini': [
+                    'gemini-2.5-pro', 'gemini-2.5-flash', 'gemini-2.5-flash-lite-preview', 
+                    'gemini-2.5-flash-native-audio', 'gemini-2.5-flash-preview-text-to-speech', 
+                    'gemini-2.5-pro-preview-text-to-speech', 'gemini-2.0-flash'
+                ],
+                'vertexai': ['gemini-pro', 'gemini-ultra'],
+                'llamacpp': ['llama-2-13b-chat.Q4_K_M', 'mistral-7b-instruct-v0.2.Q4_K_M'],
+                'rest': ['custom-rest-endpoint']
+            };
+            
+            let options = '<option value="" selected disabled>Select a model</option>';
+            if (models[hub]) {
+                models[hub].forEach(model => {
+                    options += `<option value="${model}">${model}</option>`;
+                });
+            } else {
+                options = '<option value="" selected disabled>No models available</option>';
+            }
+            
+            return options;
+        }
+
+        // Select All toggle
+        document.getElementById('selectAll').addEventListener('change', function() {
+            const isChecked = this.checked;
+            document.querySelectorAll('.category-toggle').forEach(checkbox => {
+                checkbox.checked = isChecked;
+            });
+        });
+
+        // Start evaluation button
+        document.getElementById('startEvaluation').addEventListener('click', function() {
+            // Get model information
+            let generator, modelName;
+            
+            if (document.getElementById('supported-tab').classList.contains('active')) {
+                generator = document.getElementById('modelHub').value;
+                modelName = document.getElementById('modelName').value;
+            } else {
+                generator = document.getElementById('customModelHub').value;
+                modelName = document.getElementById('customModelName').value;
+            }
+            
+            // Get API keys
+            const apiKeys = {};
+            const keyInputs = [
+                'openai_api_key',
+                'hf_token',
+                'replicate_api_token',
+                'mistral_api_key',
+                'cohere_api_key',
+                'anthropic_api_key',
+                'google_api_key',
+                'rest_api_key'
+            ];
+            keyInputs.forEach(keyId => {
+                const input = document.getElementById(keyId);
+                if (input && input.value) {
+                    apiKeys[keyId] = input.value;
+                }
+            });
+            
+            // Get selected categories
+            const selectedCategories = [];
+            document.querySelectorAll('.category-toggle:checked').forEach(checkbox => {
+                selectedCategories.push(checkbox.dataset.category);
+            });
+
+            // Get parallel attempts
+            const parallelAttempts = document.getElementById('parallelAttempts').value;
+            
+            // Validate inputs
+            if (!generator) {
+                alert('Please select a model hub');
+                return;
+            }
+            
+            if (!modelName) {
+                alert('Please select or enter a model name');
+                return;
+            }
+            
+            if (selectedCategories.length === 0) {
+                alert('Please select at least one evaluation category');
+                return;
+            }
+
+            // Validate REST configuration if REST generator is selected
+            if (generator === 'rest') {
+                const restUri = document.getElementById('restUri').value;
+                if (!restUri) {
+                    alert('Please enter a REST endpoint URI');
+                    return;
+                }
+                
+                const requestTemplate = document.getElementById('restRequestTemplate').value;
+                if (!requestTemplate) {
+                    alert('Please enter a request template for the REST endpoint');
+                    return;
+                }
+            }
+            
+            // Show loading
+            document.getElementById('loading').style.display = 'block';
+            
+            // API keys are already prepared
+            
+            // Prepare data for API call
+            const data = {
+                generator: generator,
+                model_name: modelName,
+                categories: selectedCategories,  // Changed from 'probes' to 'categories' to match backend expectation
+                api_keys: apiKeys,
+                parallel_attempts: parallelAttempts
+            };
+
+            // Add REST-specific configuration if REST generator is selected
+            if (generator === 'rest') {
+                const restConfig = {};
+                
+                // Get REST URI
+                const restUri = document.getElementById('restUri').value;
+                if (restUri) {
+                    restConfig.uri = restUri;
+                }
+                
+                // Get request template
+                const requestTemplate = document.getElementById('restRequestTemplate').value;
+                if (requestTemplate) {
+                    try {
+                        restConfig.req_template_json_object = JSON.parse(requestTemplate);
+                    } catch (e) {
+                        restConfig.req_template = requestTemplate;
+                    }
+                }
+                
+                // Get custom headers
+                const headers = document.getElementById('restHeaders').value;
+                if (headers) {
+                    try {
+                        restConfig.headers = JSON.parse(headers);
+                    } catch (e) {
+                        alert('Invalid JSON in custom headers');
+                        return;
+                    }
+                }
+                
+                // Get response field
+                const responseField = document.getElementById('restResponseField').value;
+                if (responseField) {
+                    restConfig.response_json = true;
+                    restConfig.response_json_field = responseField;
+                }
+                
+                // Add REST config to data
+                data.rest_config = restConfig;
+            }
+
+            // Submit job
+            fetch('/api/start_job', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Hide loading
+                document.getElementById('loading').style.display = 'none';
+                
+                if (data.status === 'success') {
+                    // Show success modal
+                    document.getElementById('jobId').textContent = data.job_id;
+                    document.getElementById('viewJobBtn').href = `/job/${data.job_id}`;
+                    
+                    const modal = new bootstrap.Modal(document.getElementById('resultModal'));
+                    modal.show();
+                } else {
+                    alert(`Error: ${data.message}`);
+                }
+            })
+            .catch(error => {
+                document.getElementById('loading').style.display = 'none';
+                alert('Error starting job: ' + error);
+            });
+        });
+        
+        // Handle logout functionality
+        document.getElementById('logout-button')?.addEventListener('click', function() {
+            // Clear local storage auth token
+            localStorage.removeItem('authToken');
+            
+            // Call backend logout endpoint
+            fetch('/auth/logout')
+                .then(response => {
+                    if (response.ok) {
+                        // Redirect to login page
+                        window.location.href = '/login';
+                    } else {
+                        alert('Logout failed. Please try again.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Logout error:', error);
+                    alert('Logout error. Please try again.');
+                });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Detail - Garak LLM Evaluation Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .card-header {
+            background-color: #f8f9fa;
+            border-bottom: none;
+            padding: 1rem 1.25rem;
+        }
+        .card-title {
+            margin-bottom: 0;
+            font-weight: 600;
+            color: #333;
+        }
+        .status-badge {
+            font-size: 1rem;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+        }
+        .status-pending {
+            background-color: #ffc107;
+        }
+        .status-running {
+            background-color: #0d6efd;
+        }
+        .status-completed {
+            background-color: #198754;
+        }
+        .status-failed {
+            background-color: #dc3545;
+        }
+        .console-output {
+            background-color: #212529;
+            color: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: 'Courier New', Courier, monospace;
+            white-space: pre-wrap;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .results-table th {
+            background-color: #f8f9fa;
+        }
+        .vulnerability-high {
+            background-color: #ffecec;
+        }
+        .vulnerability-medium {
+            background-color: #fff9e6;
+        }
+        .vulnerability-low {
+            background-color: #f0f9ff;
+        }
+        #refreshStatus {
+            display: none;
+        }
+        .probe-category {
+            display: inline-block;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            padding: 0.2rem 0.4rem;
+            margin-right: 0.3rem;
+            margin-bottom: 0.3rem;
+        }
+        .category-security { background-color: #ffebee; }
+        .category-privacy { background-color: #e8f5e9; }
+        .category-toxicity { background-color: #fff8e1; }
+        .category-hallucination { background-color: #e3f2fd; }
+        .category-performance { background-color: #f3e5f5; }
+        .category-robustness { background-color: #e0f2f1; }
+        .category-ethics { background-color: #fce4ec; }
+        .category-stereotype { background-color: #ede7f6; }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="bi bi-shield-lock-fill me-2"></i>
+                Garak LLM Evaluation Dashboard
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/jobs">Jobs</a>
+                    </li>
+                    {% if user_email %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-person-circle me-1"></i>{{ user_email }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="#" id="logout-button">
+                                <i class="bi bi-box-arrow-right me-2"></i>Logout
+                            </a></li>
+                        </ul>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container my-4">
+        <div class="row mb-4">
+            <div class="col-12">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item"><a href="/jobs">Jobs</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Job {{ job_id[:8] }}</li>
+                    </ol>
+                </nav>
+                
+                <div class="d-flex justify-content-between align-items-center">
+                    <h1>Job Details</h1>
+                    <div>
+                        <span id="refreshStatus" class="me-2">
+                            <span class="spinner-border spinner-border-sm text-primary" role="status"></span>
+                            Auto-refreshing...
+                        </span>
+                        <a href="/jobs" class="btn btn-outline-primary">
+                            <i class="bi bi-arrow-left me-2"></i>Back to Jobs
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-4">
+                <!-- Job Summary Card -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="card-title">Job Summary</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-center mb-3">
+                            <span class="badge status-badge status-{{ job.status }}">{{ job.status|upper }}</span>
+                        </div>
+                        
+                        <table class="table table-borderless">
+                            <tbody>
+                                <tr>
+                                    <th scope="row">Job ID</th>
+                                    <td class="text-break">{{ job_id }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Generator</th>
+                                    <td>{{ job.generator }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Model</th>
+                                    <td>{{ job.model_name }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Created</th>
+                                    <td>{{ job.created_at }}</td>
+                                </tr>
+                                {% if job.start_time %}
+                                <tr>
+                                    <th scope="row">Started</th>
+                                    <td>{{ job.start_time }}</td>
+                                </tr>
+                                {% endif %}
+                                {% if job.end_time %}
+                                <tr>
+                                    <th scope="row">Completed</th>
+                                    <td>{{ job.end_time }}</td>
+                                </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                        
+                        {% if job.status == 'completed' %}
+                        <div class="d-grid gap-2 mt-3">
+                            <a href="/download/{{ job_id }}/report" class="btn btn-success">
+                                <i class="bi bi-file-earmark-arrow-down me-2"></i>Download Report
+                            </a>
+                            <a href="/download/{{ job_id }}/hits" class="btn btn-outline-primary">
+                                <i class="bi bi-file-earmark-text me-2"></i>Download Raw Data
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <!-- Probes Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Probes Used</h5>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Total Probes:</strong> {{ job.probes|length }}</p>
+                        <div>
+                            {% for probe in job.probes %}
+                                {% set category = probe.split('.')[0] %}
+                                <span class="probe-category category-{{ category }}">{{ probe }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-8">
+                <!-- Results Card (visible when job is complete) -->
+                {% if job.status == 'completed' %}
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="card-title">Evaluation Results</h5>
+                        <ul class="nav nav-tabs card-header-tabs mt-2" id="reportTabs">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="report-html-tab" data-bs-toggle="tab" href="#report-html" role="tab">HTML Report</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="trust-scores-tab" data-bs-toggle="tab" href="#trust-scores" role="tab">Trust Scores</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="failing-prompts-tab" data-bs-toggle="tab" href="#failing-prompts" role="tab">Failing Prompts</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="report-summary-tab" data-bs-toggle="tab" href="#report-summary" role="tab">Summary</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle-fill me-2"></i>
+                            Results are available for download. Use the download buttons to get the full JSON report or raw data.
+                        </div>
+                        
+                        <div class="tab-content" id="reportTabsContent">
+                            <!-- HTML Report Tab -->
+                            <div class="tab-pane fade show active" id="report-html" role="tabpanel">
+                                {% if html_report %}
+                                <div class="html-report-container">
+                                    <iframe id="htmlReportFrame" style="width: 100%; height: 700px; border: 1px solid #ddd; border-radius: 4px;"
+                                        srcdoc="{{ html_report|e }}">
+                                    </iframe>
+                                </div>
+                                {% else %}
+                                <div class="alert alert-warning">
+                                    <i class="bi bi-exclamation-triangle me-2"></i>
+                                    HTML report is not available for this job.
+                                </div>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Trust Scores Tab -->
+                            <div class="tab-pane fade" id="trust-scores" role="tabpanel">
+                                <div class="trust-score-container">
+                                    <h3>Trust Scores by Module and Probe</h3>
+                                    
+                                    {% if trust_score_data and trust_score_data|length > 0 %}
+                                        <div class="row mb-4">
+                                            <div class="col-12">
+                                                <div class="alert alert-info">
+                                                    <p><strong>Trust Score Legend:</strong></p>
+                                                    <ul class="mb-0">
+                                                        <li><span class="badge bg-success">100%</span> - All tests passed</li>
+                                                        <li><span class="badge bg-danger">0%</span> - Test failures detected</li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="accordion" id="trustScoreAccordion">
+                                            {% for module_name, module_data in trust_score_data.items() %}
+                                                <div class="accordion-item">
+                                                    <h2 class="accordion-header" id="heading{{ loop.index }}">
+                                                        <button class="accordion-button {{ 'collapsed' if not loop.first else '' }}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ loop.index }}" aria-expanded="{{ 'true' if loop.first else 'false' }}" aria-controls="collapse{{ loop.index }}">
+                                                            <span class="me-2">
+                                                                {% if module_data.score == 100 %}
+                                                                    <span class="badge bg-success">100%</span>
+                                                                {% elif module_data.score == 0 %}
+                                                                    <span class="badge bg-danger">0%</span>
+                                                                {% else %}
+                                                                    <span class="badge bg-warning">{{ module_data.score|int }}%</span>
+                                                                {% endif %}
+                                                            </span>
+                                                            <strong>{{ module_name }}</strong>
+                                                        </button>
+                                                    </h2>
+                                                    <div id="collapse{{ loop.index }}" class="accordion-collapse collapse {{ 'show' if loop.first else '' }}" aria-labelledby="heading{{ loop.index }}" data-bs-parent="#trustScoreAccordion">
+                                                        <div class="accordion-body">
+                                                            <table class="table table-striped">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Probe</th>
+                                                                        <th>Score</th>
+                                                                        <th>Failed Detectors</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    {% for probe_name, probe_data in module_data.probes.items() %}
+                                                                        <tr>
+                                                                            <td>{{ probe_name }}</td>
+                                                                            <td>
+                                                                                {% if probe_data.score == 100 %}
+                                                                                    <span class="badge bg-success">100%</span>
+                                                                                {% elif probe_data.score == 0 %}
+                                                                                    <span class="badge bg-danger">0%</span>
+                                                                                {% else %}
+                                                                                    <span class="badge bg-warning">{{ probe_data.score|int }}%</span>
+                                                                                {% endif %}
+                                                                            </td>
+                                                                            <td>
+                                                                                {% if probe_data.detectors|length > 0 %}
+                                                                                    <ul class="mb-0">
+                                                                                        {% for detector_name, detector_data in probe_data.detectors.items() %}
+                                                                                            <li>{{ detector_name }}</li>
+                                                                                        {% endfor %}
+                                                                                    </ul>
+                                                                                {% else %}
+                                                                                    <span class="text-muted">None</span>
+                                                                                {% endif %}
+                                                                            </td>
+                                                                        </tr>
+                                                                    {% endfor %}
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        <div class="alert alert-warning">
+                                            <i class="bi bi-exclamation-triangle me-2"></i>
+                                            No trust score data available for this job.
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <!-- Failing Prompts Tab -->
+                            <div class="tab-pane fade" id="failing-prompts" role="tabpanel">
+                                <div class="failing-prompts-container">
+                                    <h3>Failing Prompts {% if failing_prompts %}({{ failing_prompts|length }}){% endif %}</h3>
+                                    
+                                    {% if failing_prompts and failing_prompts|length > 0 %}
+                                        <div class="alert alert-info mb-4">
+                                            <i class="bi bi-info-circle-fill me-2"></i>
+                                            <p class="mb-0"><strong>These are prompts that caused the model to fail security tests.</strong> Review these failures carefully to understand potential vulnerabilities.</p>
+                                        </div>
+                                        
+                                        <div class="accordion" id="failingPromptsAccordion">
+                                            {% for failure in failing_prompts %}
+                                                <div class="accordion-item">
+                                                    <h2 class="accordion-header" id="failureHeading{{ loop.index }}">
+                                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#failureCollapse{{ loop.index }}" aria-expanded="false" aria-controls="failureCollapse{{ loop.index }}">
+                                                            <span class="badge bg-danger me-2">Failed</span>
+                                                            <strong>{{ failure.probe }}</strong> - {{ failure.goal|truncate(80) }}
+                                                        </button>
+                                                    </h2>
+                                                    <div id="failureCollapse{{ loop.index }}" class="accordion-collapse collapse" aria-labelledby="failureHeading{{ loop.index }}" data-bs-parent="#failingPromptsAccordion">
+                                                        <div class="accordion-body">
+                                                            <div class="row">
+                                                                <div class="col-md-6">
+                                                                    <div class="card mb-3">
+                                                                        <div class="card-header bg-light"><strong>Prompt</strong></div>
+                                                                        <div class="card-body">
+                                                                            <pre class="mb-0">{{ failure.prompt }}</pre>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <div class="card mb-3">
+                                                                        <div class="card-header bg-light"><strong>Model Output</strong></div>
+                                                                        <div class="card-body">
+                                                                            <pre class="mb-0">{{ failure.output }}</pre>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="row">
+                                                                <div class="col-md-6">
+                                                                    <div class="card mb-3">
+                                                                        <div class="card-header bg-light"><strong>Goal</strong></div>
+                                                                        <div class="card-body">
+                                                                            <p class="mb-0">{{ failure.goal }}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <div class="card">
+                                                                        <div class="card-header bg-light"><strong>Failed Detectors</strong></div>
+                                                                        <div class="card-body">
+                                                                            <ul class="mb-0">
+                                                                                {% for detector in failure.failing_detectors %}
+                                                                                    <li>{{ detector }}</li>
+                                                                                {% endfor %}
+                                                                            </ul>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        <div class="alert alert-success">
+                                            <i class="bi bi-check-circle me-2"></i>
+                                            No failing prompts found for this job. All tests passed!
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <!-- Summary Tab -->
+                            <div class="tab-pane fade" id="report-summary" role="tabpanel">
+                                <div class="table-responsive">
+                                    <table class="table table-hover results-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Category</th>
+                                                <th>Probe</th>
+                                                <th>Vulnerabilities</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- This would be populated from the actual JSON report data -->
+                                            <tr class="vulnerability-high">
+                                                <td>Security</td>
+                                                <td>dan.DanInTheWild</td>
+                                                <td>5 detected</td>
+                                            </tr>
+                                            <tr class="vulnerability-medium">
+                                                <td>Privacy</td>
+                                                <td>leakreplay.PotterComplete</td>
+                                                <td>3 detected</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Robustness</td>
+                                                <td>encoding.InjectZalgo</td>
+                                                <td>0 detected</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                
+                <!-- Console Output Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Console Output</h5>
+                    </div>
+                    <div class="card-body">
+                        {% if job.status == 'pending' or job.status == 'running' %}
+                        <div class="alert alert-info mt-3" role="alert">
+                            <i class="bi bi-hourglass-split me-2"></i>Job is {{ job.status }}...
+                            <span id="refreshStatus" class="spinner-border spinner-border-sm ms-2" role="status" style="display: none;"></span>
+                        </div>
+                        <!-- Progress tracking section -->
+                        <div class="mt-3" id="progressTracking">
+                            <h6 class="mb-1">Progress: <span id="progressPercent">0</span>%</h6>
+                            <div class="progress mb-2">
+                                <div id="progressBar" class="progress-bar progress-bar-striped progress-bar-animated" 
+                                    role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-between text-muted small">
+                                <span id="progressItems">Initializing...</span>
+                                <span id="timeRemaining">Calculating...</span>
+                            </div>
+                            <div class="d-flex justify-content-between text-muted small mt-1">
+                                <span id="elapsedTime"></span>
+                                <span id="estimatedCompletion"></span>
+                            </div>
+                        </div>
+                        <div class="alert alert-primary">
+                            <i class="bi bi-arrow-repeat me-2"></i>
+                            Job is currently running. Output will refresh automatically.
+                        </div>
+                        {% elif job.status == 'completed' %}
+                        <div class="alert alert-success">
+                            <i class="bi bi-check-circle me-2"></i>
+                            Job has completed successfully.
+                        </div>
+                        {% elif job.status == 'failed' %}
+                        <div class="alert alert-danger">
+                            <i class="bi bi-exclamation-triangle me-2"></i>
+                            Job has failed. See output below for details.
+                        </div>
+                        {% endif %}
+                        
+                        <div class="console-output" id="consoleOutput">{{ job.output|default('No output available yet.') }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Function to scroll console to bottom
+        function scrollConsoleToBottom() {
+            const consoleOutput = document.getElementById('consoleOutput');
+            if (consoleOutput) {
+                consoleOutput.scrollTop = consoleOutput.scrollHeight;
+            }
+        }
+        
+        // Auto-refresh for running jobs
+        document.addEventListener('DOMContentLoaded', function() {
+            // Scroll console to bottom on page load
+            scrollConsoleToBottom();
+            const jobStatus = "{{ job.status }}";
+            
+            if (jobStatus === 'pending' || jobStatus === 'running') {
+                document.getElementById('refreshStatus').style.display = 'inline-block';
+                
+                // Update progress information
+                function updateProgress() {
+                    fetch('/api/job_progress/{{ job_id }}')
+                        .then(response => response.json())
+                        .then(data => {
+                            // Update progress bar
+                            const progressPercent = data.progress || 0;
+                            document.getElementById('progressPercent').textContent = Math.round(progressPercent);
+                            const progressBar = document.getElementById('progressBar');
+                            progressBar.style.width = progressPercent + '%';
+                            progressBar.setAttribute('aria-valuenow', progressPercent);
+                            
+                            // Update item counts if available
+                            if (data.completed_items && data.total_items) {
+                                document.getElementById('progressItems').textContent = 
+                                    `${data.completed_items} of ${data.total_items} items processed`;
+                            }
+                            
+                            // Update time estimates
+                            if (data.time_remaining) {
+                                document.getElementById('timeRemaining').textContent = 
+                                    `Estimated time remaining: ${data.time_remaining}`;
+                            }
+                            
+                            if (data.elapsed_time) {
+                                document.getElementById('elapsedTime').textContent = 
+                                    `Elapsed time: ${data.elapsed_time}`;
+                            }
+                            
+                            // If job completed during our check, refresh the page
+                            if (data.completed) {
+                                window.location.reload();
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error updating progress:', error);
+                        });
+                }
+                
+                // Initial update and then every 3 seconds
+                updateProgress();
+                const progressInterval = setInterval(updateProgress, 3000);
+                
+                // Also check job status and update console output more frequently
+                const refreshOutputInterval = setInterval(function() {
+                    fetch('/api/job_status/{{ job_id }}')
+                        .then(response => response.json())
+                        .then(data => {
+                            // Update console output if available
+                            if (data.output) {
+                                const consoleOutput = document.getElementById('consoleOutput');
+                                consoleOutput.textContent = data.output;
+                                
+                                // Auto-scroll to the bottom of the console output
+                                consoleOutput.scrollTop = consoleOutput.scrollHeight;
+                            }
+                            
+                            // If job is no longer running, refresh the page to show final results
+                            if (data.status !== 'pending' && data.status !== 'running') {
+                                clearInterval(refreshOutputInterval);
+                                clearInterval(progressInterval);
+                                window.location.reload();
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error refreshing job status:', error);
+                        });
+                }, 1000); // Update console output every 1 second
+                
+                // Replace the existing refresh interval with the new one
+                if (typeof refreshInterval !== 'undefined') {
+                    clearInterval(refreshInterval);
+                }
+            }
+            
+            // Handle logout functionality
+            document.getElementById('logout-button')?.addEventListener('click', function() {
+                // Clear local storage auth token
+                localStorage.removeItem('authToken');
+                
+                // Call backend logout endpoint
+                fetch('/auth/logout')
+                    .then(response => {
+                        if (response.ok) {
+                            // Redirect to login page
+                            window.location.href = '/login';
+                        } else {
+                            alert('Logout failed. Please try again.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Logout error:', error);
+                        alert('Logout error. Please try again.');
+                    });
+            });
+        });
+    </script>
+</body>
+</html>
