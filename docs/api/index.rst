@@ -1,5 +1,5 @@
-Garak Scans API Reference
-=========================
+Garak API Reference
+===================
 
 The Garak Dashboard API provides programmatic access to LLM security scanning capabilities.
 
@@ -10,47 +10,25 @@ The Garak Dashboard API provides programmatic access to LLM security scanning ca
 Overview
 --------
 
-The Garak Scans API is a RESTful interface that enables developers to integrate AI red-teaming 
+The Garak API is a RESTful interface that enables developers to integrate AI red-teaming 
 capabilities into their workflows. The API allows you to create, monitor, and manage security 
 scans of language models, testing for vulnerabilities including jailbreaking attacks, prompt 
 injection, data leakage, toxicity generation, and other security weaknesses.
 
 .. toctree::
    :maxdepth: 2
-   :caption: Using the API
+   :caption: Garak Detect API
 
-   authentication
-   quickstart
-   api-keys-reference
-   endpoints/index
-   examples
-   
-.. toctree::
-   :maxdepth: 2
-   :caption: API Reference
-   
-   endpoints/scan-management
-   endpoints/discovery
-   endpoints/admin
-   endpoints/reports
-   
-.. toctree::
-   :maxdepth: 2
-   :caption: Additional Reference
-
-   error-handling
-   rate-limiting
-   python-sdk
-   best-practices
-   
-.. toctree::
-   :maxdepth: 1
-   :caption: Deployment
-   
-   deployment/local
-   deployment/docker
-   deployment/cloud
+   garak-detect-api/authentication
+   garak-detect-api/quickstart
+   garak-detect-api/api-keys-reference
+   garak-detect-api/endpoints/index
+   garak-detect-api/endpoints/scan-management
+   garak-detect-api/endpoints/discovery
+   garak-detect-api/endpoints/reports
+   garak-detect-api/rate-limiting
+   garak-detect-api/python-sdk
 
 ----
 
-Copyright © Garak Security Team. All rights reserved.
+Copyright © Garak Inc All rights reserved.

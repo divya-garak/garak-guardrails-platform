@@ -15,7 +15,7 @@ List Reports
    .. code-block:: bash
 
       curl -H "X-API-Key: your_api_key_here" \
-           https://your-api-domain.com/api/v1/scans/{scan_id}/reports
+           https://garak-dashboard-765684604189.us-central1.run.app/api/v1/scans/{scan_id}/reports
 
    **Response:**
 
@@ -47,7 +47,7 @@ Download JSON Report
    .. code-block:: bash
 
       curl -H "X-API-Key: your_api_key_here" \
-           https://your-api-domain.com/api/v1/scans/{scan_id}/reports/json \
+           https://garak-dashboard-765684604189.us-central1.run.app/api/v1/scans/{scan_id}/reports/json \
            -o scan_report.json
 
 Download HTML Report
@@ -62,7 +62,7 @@ Download HTML Report
    .. code-block:: bash
 
       curl -H "X-API-Key: your_api_key_here" \
-           https://your-api-domain.com/api/v1/scans/{scan_id}/reports/html \
+           https://garak-dashboard-765684604189.us-central1.run.app/api/v1/scans/{scan_id}/reports/html \
            -o scan_report.html
 
 Download JSONL Report
@@ -77,7 +77,7 @@ Download JSONL Report
    .. code-block:: bash
 
       curl -H "X-API-Key: your_api_key_here" \
-           https://your-api-domain.com/api/v1/scans/{scan_id}/reports/jsonl \
+           https://garak-dashboard-765684604189.us-central1.run.app/api/v1/scans/{scan_id}/reports/jsonl \
            -o scan_report.jsonl
 
 Download Hits Report
@@ -92,7 +92,7 @@ Download Hits Report
    .. code-block:: bash
 
       curl -H "X-API-Key: your_api_key_here" \
-           https://your-api-domain.com/api/v1/scans/{scan_id}/reports/hits \
+           https://garak-dashboard-765684604189.us-central1.run.app/api/v1/scans/{scan_id}/reports/hits \
            -o scan_hits.json
 
 Report Types

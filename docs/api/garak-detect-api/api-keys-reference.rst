@@ -78,7 +78,7 @@ Single Generator Example
 
 .. code-block:: bash
 
-   curl -X POST https://your-api-domain.com/api/v1/scans \\
+   curl -X POST https://garak-dashboard-765684604189.us-central1.run.app/api/v1/scans \\
      -H "X-API-Key: your_api_key_here" \\
      -H "Content-Type: application/json" \\
      -d '{
@@ -96,7 +96,7 @@ Multiple Generators with LiteLLM
 
 .. code-block:: bash
 
-   curl -X POST https://your-api-domain.com/api/v1/scans \\
+   curl -X POST https://garak-dashboard-765684604189.us-central1.run.app/api/v1/scans \\
      -H "X-API-Key: your_api_key_here" \\
      -H "Content-Type: application/json" \\
      -d '{
@@ -119,7 +119,7 @@ Local Generators (No API Keys)
 
 .. code-block:: bash
 
-   curl -X POST https://your-api-domain.com/api/v1/scans \\
+   curl -X POST https://garak-dashboard-765684604189.us-central1.run.app/api/v1/scans \\
      -H "X-API-Key: your_api_key_here" \\
      -H "Content-Type: application/json" \\
      -d '{
@@ -137,7 +137,7 @@ Python Example
    import requests
 
    # API configuration
-   API_BASE = "https://your-api-domain.com/api/v1"
+   API_BASE = "https://garak-dashboard-765684604189.us-central1.run.app/api/v1"
    headers = {
        "X-API-Key": "your_api_key_here",
        "Content-Type": "application/json"
@@ -166,7 +166,7 @@ To see all available generators and their requirements programmatically:
 .. code-block:: bash
 
    curl -H "X-API-Key: your_api_key_here" \\
-        https://your-api-domain.com/api/v1/generators
+        https://garak-dashboard-765684604189.us-central1.run.app/api/v1/generators
 
 This will return detailed information about each generator including whether it requires an API key.
 
