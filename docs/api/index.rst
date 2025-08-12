@@ -3,10 +3,6 @@ Garak API Reference
 
 The Garak Dashboard API provides programmatic access to LLM security scanning capabilities.
 
-.. note::
-   This API documentation is under active development. Let us know if there's anything
-   wrong, confusing, or missing by emailing docs@getgarak.com
-
 Overview
 --------
 
@@ -16,7 +12,7 @@ scans of language models, testing for vulnerabilities including jailbreaking att
 injection, data leakage, toxicity generation, and other security weaknesses.
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    :caption: Garak Detect API
 
    garak-detect-api/authentication
@@ -28,7 +24,3 @@ injection, data leakage, toxicity generation, and other security weaknesses.
    garak-detect-api/endpoints/reports
    garak-detect-api/rate-limiting
    garak-detect-api/python-sdk
-
-----
-
-Copyright © Garak Inc All rights reserved.

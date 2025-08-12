@@ -1,7 +1,7 @@
-Garak Security API Documentation
-================================
+Garak API Documentation
+=======================
 
-This directory contains the complete API reference documentation for the Garak Security Scans API,
+This directory contains the complete API reference documentation for the Garak API,
 following the same structure and format as the main Garak project documentation.
 
 Building the Documentation
@@ -44,28 +44,15 @@ Documentation Structure
 
 The documentation is organized into the following sections:
 
-**Using the API**
-* :doc:`authentication` - API key setup and management
-* :doc:`quickstart` - Getting started guide
-* :doc:`endpoints/index` - Complete endpoint reference
-* :doc:`examples` - Practical usage examples
-
-**API Reference**
-* :doc:`endpoints/scan-management` - Scan lifecycle management
-* :doc:`endpoints/discovery` - Capability discovery
-* :doc:`endpoints/admin` - Administrative operations  
-* :doc:`endpoints/reports` - Report download and management
-
-**Usage Tips**
-* :doc:`error-handling` - Error codes and troubleshooting
-* :doc:`rate-limiting` - Understanding and managing rate limits
-* :doc:`python-sdk` - Using the Python SDK
-* :doc:`best-practices` - Best practices for API usage
-
-**Deployment**
-* :doc:`deployment/local` - Local development setup
-* :doc:`deployment/docker` - Container deployment
-* :doc:`deployment/cloud` - Cloud platform deployment
+**Garak Detect API**
+* :doc:`garak-detect-api/authentication` - API key setup and management
+* :doc:`garak-detect-api/quickstart` - Getting started guide
+* :doc:`garak-detect-api/endpoints/index` - Complete endpoint reference
+* :doc:`garak-detect-api/endpoints/scan-management` - Scan lifecycle management
+* :doc:`garak-detect-api/endpoints/discovery` - Capability discovery
+* :doc:`garak-detect-api/endpoints/reports` - Report download and management
+* :doc:`garak-detect-api/rate-limiting` - Understanding and managing rate limits
+* :doc:`garak-detect-api/python-sdk` - Using the Python SDK
 
 File Organization
 -----------------
@@ -73,18 +60,20 @@ File Organization
 .. code-block:: text
 
    docs/api/
-   ├── index.rst              # Main documentation index
-   ├── conf.py               # Sphinx configuration
-   ├── authentication.rst   # Authentication guide
-   ├── quickstart.rst       # Quick start guide
-   ├── python-sdk.rst       # Python SDK documentation
-   ├── endpoints/           # API endpoint reference
-   │   ├── index.rst
-   │   ├── scan-management.rst
-   │   ├── discovery.rst
-   │   ├── reports.rst
-   │   └── admin.rst
-   └── _build/              # Generated documentation output
+   ├── index.rst                    # Main documentation index
+   ├── conf.py                     # Sphinx configuration
+   ├── garak-detect-api/           # Garak Detect API documentation
+   │   ├── authentication.rst     # Authentication guide
+   │   ├── quickstart.rst         # Quick start guide
+   │   ├── python-sdk.rst         # Python SDK documentation
+   │   ├── rate-limiting.rst      # Rate limiting documentation
+   │   ├── api-keys-reference.rst # API keys reference
+   │   └── endpoints/             # API endpoint reference
+   │       ├── index.rst
+   │       ├── scan-management.rst
+   │       ├── discovery.rst
+   │       └── reports.rst
+   └── _build/                     # Generated documentation output
 
 Consistency with Main Documentation
 -----------------------------------
@@ -109,10 +98,3 @@ When updating the API documentation:
 3. **Update cross-references** when adding new sections
 4. **Test documentation builds** before submitting changes
 5. **Maintain the hierarchical structure** established in the index
-
-For questions about the documentation structure or content, contact the
-Garak Security team at docs@getgarak.com.
-
-----
-
-Copyright © Garak Security Team. All rights reserved.
