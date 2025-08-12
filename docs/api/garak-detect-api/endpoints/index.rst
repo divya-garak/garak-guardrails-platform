@@ -40,8 +40,14 @@ Core Endpoints
 * ``GET /api/v1/scans/{id}/reports/json`` - Download JSON report
 * ``GET /api/v1/scans/{id}/reports/html`` - Download HTML report
 
-**System**
+**Admin & System**
 
+* ``POST /api/v1/admin/bootstrap`` - Create first admin API key (no auth required)
+* ``POST /api/v1/admin/api-keys`` - Create new API key (admin required)
+* ``GET /api/v1/admin/api-keys`` - List all API keys (admin required)
+* ``GET /api/v1/admin/api-keys/{id}`` - Get API key details (admin required)
+* ``POST /api/v1/admin/api-keys/{id}/revoke`` - Revoke API key (admin required)
+* ``DELETE /api/v1/admin/api-keys/{id}`` - Delete API key (admin required)
 * ``GET /api/v1/health`` - API health check (no auth required)
 * ``GET /api/v1/info`` - API information (no auth required)
 

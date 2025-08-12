@@ -64,6 +64,90 @@ Create Scan
         }
       }
 
+REST Generator Configuration
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The **rest** generator allows you to test any custom REST API endpoint that follows the OpenAI chat completions format. This is useful for:
+
+- Custom model deployments
+- Self-hosted LLM servers (like vLLM, FastChat, etc.)
+- Proxy services or middleware
+- Any OpenAI-compatible API endpoint
+
+**Required Parameters:**
+
+* ``generator`` - Must be ``"rest"``
+* ``model_name`` - The full endpoint URL (e.g., ``"https://your-api.com/v1/chat/completions"``)
+
+**Optional API Keys:**
+
+* ``rest_api_key`` - Authentication token if your endpoint requires it
+* ``custom_headers`` - Additional headers for authentication
+
+**REST Generator Examples:**
+
+**Testing Garak Security API endpoint:**
+
+.. code-block:: bash
+
+   curl -X POST https://garak-dashboard-765684604189.us-central1.run.app/api/v1/scans \
+        -H "X-API-Key: your_api_key_here" \
+        -H "Content-Type: application/json" \
+        -d '{
+          "generator": "rest",
+          "model_name": "https://api.garaksecurity.com/v1/chat/completions",
+          "probe_categories": ["dan", "security"],
+          "name": "Garak Security API Test"
+        }'
+
+**Custom API with authentication:**
+
+.. code-block:: bash
+
+   curl -X POST https://garak-dashboard-765684604189.us-central1.run.app/api/v1/scans \
+        -H "X-API-Key: your_api_key_here" \
+        -H "Content-Type: application/json" \
+        -d '{
+          "generator": "rest",
+          "model_name": "https://your-custom-api.com/v1/chat/completions",
+          "probe_categories": ["hallucination"],
+          "name": "Custom API Test",
+          "api_keys": {
+            "rest_api_key": "your-custom-api-token"
+          }
+        }'
+
+**LiteLLM or OpenAI-compatible proxies:**
+
+.. code-block:: bash
+
+   curl -X POST https://garak-dashboard-765684604189.us-central1.run.app/api/v1/scans \
+        -H "X-API-Key: your_api_key_here" \
+        -H "Content-Type: application/json" \
+        -d '{
+          "generator": "rest", 
+          "model_name": "https://your-litellm-proxy.com/chat/completions",
+          "probe_categories": ["dan", "security"],
+          "name": "LiteLLM Proxy Test",
+          "api_keys": {
+            "rest_api_key": "sk-your-litellm-key"
+          }
+        }'
+
+**Self-hosted models (no authentication):**
+
+.. code-block:: bash
+
+   curl -X POST https://garak-dashboard-765684604189.us-central1.run.app/api/v1/scans \
+        -H "X-API-Key: your_api_key_here" \
+        -H "Content-Type: application/json" \
+        -d '{
+          "generator": "rest",
+          "model_name": "http://localhost:8000/v1/chat/completions", 
+          "probe_categories": ["toxicity"],
+          "name": "Local Model Test"
+        }'
+
 Monitor Scan
 ------------
 

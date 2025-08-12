@@ -138,28 +138,6 @@ Get Category Probes
         ]
       }
 
-Available Generators
--------------------
-
-* **openai** - OpenAI GPT models (API key required)
-* **anthropic** - Anthropic Claude models (API key required)  
-* **huggingface** - Open source models (no API key for local models)
-* **cohere** - Cohere models (API key required)
-* **gemini** - Google Gemini models (API key required)
-* **mistral** - Mistral AI models (API key required)
-* **replicate** - Replicate platform models (API key required)
-* **vertexai** - Google Vertex AI models (credentials required)
-* **ollama** - Local Ollama models (no API key)
-* **rest** - Custom REST endpoints (may need API key)
-
-Available Probe Categories
--------------------------
-
-* **hallucination** - Tests for factual inaccuracies and false information
-* **security** - Package hallucination and security vulnerabilities  
-* **promptinject** - Prompt injection attacks
-* **encoding** - Various encoding-based attacks
-* **misleading** - Misleading or deceptive responses
 
 Notes
 -----
