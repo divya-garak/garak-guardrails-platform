@@ -1,15 +1,15 @@
 Garak API Reference
 ===================
 
-The Garak Dashboard API provides programmatic access to LLM security scanning capabilities.
+APIs for AI security testing and protection.
 
 Overview
 --------
 
-The Garak API is a RESTful interface that enables developers to integrate AI red-teaming 
-capabilities into their workflows. The API allows you to create, monitor, and manage security 
-scans of language models, testing for vulnerabilities including jailbreaking attacks, prompt 
-injection, data leakage, toxicity generation, and other security weaknesses.
+Two APIs for AI safety:
+
+* **Garak Detect API** - Test AI models for security vulnerabilities
+* **Garak Protect API** - Add real-time safety filters to AI applications
 
 .. toctree::
    :maxdepth: 3
@@ -24,4 +24,13 @@ injection, data leakage, toxicity generation, and other security weaknesses.
    garak-detect-api/endpoints/reports
    garak-detect-api/rate-limiting
    garak-detect-api/python-sdk
+
+.. toctree::
+   :maxdepth: 3
+   :caption: Garak Protect API
+
+   garak-protect-api/overview
+   garak-protect-api/quickstart
+   garak-protect-api/chat-completions
+   garak-protect-api/python-sdk
 
