@@ -24,3 +24,9 @@ injection, data leakage, toxicity generation, and other security weaknesses.
    garak-detect-api/endpoints/reports
    garak-detect-api/rate-limiting
    garak-detect-api/python-sdk
+
+.. toctree::
+   :maxdepth: 1
+   :hidden:
+
+   README
