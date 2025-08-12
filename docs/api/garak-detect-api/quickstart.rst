@@ -155,8 +155,7 @@ Next Steps
 ----------
 
 * Read the :doc:`endpoints/index` for complete API reference
-* Try :doc:`examples` with different models and probe combinations  
-* Review :doc:`rate-limiting` for API usage limits and :doc:`error-handling` for robust error management
+* Review :doc:`rate-limiting` for API usage limits
 * Optional: Use the :doc:`python-sdk` for Python applications (or build your own HTTP client)
 
 Common Issues
