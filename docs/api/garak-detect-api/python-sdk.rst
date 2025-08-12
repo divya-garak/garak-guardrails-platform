@@ -10,7 +10,7 @@ Basic Usage
 
    import requests
 
-   class GarakAPI:
+   class GarakDetectAPI:
        def __init__(self, base_url: str, api_key: str):
            self.base_url = base_url.rstrip('/')
            self.headers = {
@@ -40,7 +40,7 @@ Example
 .. code-block:: python
 
    # Initialize client
-   api = GarakAPI("https://garak-dashboard-765684604189.us-central1.run.app/api/v1", "your_api_key_here")
+   api = GarakDetectAPI("https://garak-dashboard-765684604189.us-central1.run.app/api/v1", "your_api_key_here")
 
    # Create scan
    scan_config = {
