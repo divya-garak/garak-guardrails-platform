@@ -225,6 +225,8 @@ Download Reports
 
    Download HTML report.
 
+   **Rate limit:** 50/minute
+
    .. code-block:: bash
 
       curl -H "X-API-Key: your_api_key_here" \

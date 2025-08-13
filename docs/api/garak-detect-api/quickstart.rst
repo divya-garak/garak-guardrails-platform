@@ -39,6 +39,7 @@ Verify your API key works:
    Check API health status.
 
    **Authentication:** Optional
+   **Rate limit:** 1000/minute
 
    .. code-block:: bash
 
@@ -65,6 +66,7 @@ You can also check API information:
    Get API information and capabilities.
 
    **Authentication:** Not required
+   **Rate limit:** 1000/minute
 
    .. code-block:: bash
 
@@ -80,10 +82,8 @@ You can also check API information:
      "description": "LLM security scanning and vulnerability detection API",
      "documentation": "https://docs.garaksecurity.com/api",
      "contact": "support@garaksecurity.com",
-     "rate_limits": {
-       "default": "100/minute",
-       "scan_creation": "10/minute"
-     }
+     "supported_generators": ["openai", "huggingface", "anthropic"],
+     "supported_probe_categories": ["dan", "security", "hallucination"]
    }
 
 Step 3: Discover Available Options
@@ -182,7 +182,7 @@ Check scan status (replace ``{scan_id}`` with your actual scan ID from Step 4):
 
    Get current status of a scan.
 
-   **Rate limit:** 500/minute
+   **Rate limit:** 300/minute
 
    .. code-block:: bash
 
