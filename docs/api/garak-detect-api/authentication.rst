@@ -2,7 +2,7 @@ Authentication
 ==============
 
 Most API endpoints require authentication using API keys. This page describes how to obtain
-and use API keys for accessing the Garak Detect  API.
+and use API keys for accessing the Garak Detect API.
 
 API Key Types
 -------------
