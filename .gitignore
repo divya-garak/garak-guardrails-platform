@@ -73,3 +73,22 @@ detect-dashboard/data/
 # Documentation build output
 docs/api/_build/
 docs/_build/
+
+# Firebase credentials
+detect-dashboard/firebase-sa.json
+**/firebase-sa.json
+*-firebase-*.json
+
+# Terraform sensitive files
+**/*.tfvars
+terraform.tfvars
+*.tfvars.backup
+
+# Database files with potential secrets
+**/*.db
+*.sqlite
+*.sqlite3
+detect-dashboard/data/api_keys.db
+
+# Deployment scripts with hardcoded secrets
+deployments/k8s-deployments/scripts/deploy_gcp_production_security.sh

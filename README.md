@@ -2,6 +2,16 @@
 
 Enterprise deployment of NeMo Guardrails with proprietary enhancements for production security and monitoring.
 
+## 📄 License
+
+This software is licensed under the **Garak Guardrails Platform Enterprise Edition (EE) License**.
+
+- **Proprietary Code**: All code outside of submodules is proprietary to Garak Inc. and requires a valid Enterprise subscription for production use.
+- **Open Source Components**: The `nemo-guardrails/` and `garak/` submodules retain their original Apache 2.0 licenses.
+- **Development Use**: You may copy and modify the Software for development and testing purposes without a subscription.
+
+See [LICENSE](LICENSE) for full terms. For licensing inquiries, contact legal@garaksecurity.com.
+
 ## 🏗️ Architecture
 
 This repository contains our proprietary deployment and configuration for NeMo Guardrails, using the open-source [NVIDIA/NeMo-Guardrails](https://github.com/NVIDIA/NeMo-Guardrails) as a submodule.

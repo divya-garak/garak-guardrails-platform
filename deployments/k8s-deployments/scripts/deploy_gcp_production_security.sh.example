@@ -1,0 +1,75 @@
+#!/bin/bash
+
+# =============================================================================
+# GCP Production Security Deployment Script - EXAMPLE
+# Deploy NeMo Guardrails with comprehensive security configurations
+# 
+# USAGE:
+# 1. Copy this file to deploy_gcp_production_security.sh
+# 2. Set required environment variables or update the defaults below
+# 3. Run: ./deploy_gcp_production_security.sh
+# =============================================================================
+
+set -e  # Exit on any error
+set -u  # Exit on undefined variables
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+# Logging function
+log() {
+    echo -e "${BLUE}[$(date +'%H:%M:%S')]${NC} $1"
+}
+
+error() {
+    echo -e "${RED}[ERROR]${NC} $1" >&2
+    exit 1
+}
+
+success() {
+    echo -e "${GREEN}[SUCCESS]${NC} $1"
+}
+
+warning() {
+    echo -e "${YELLOW}[WARNING]${NC} $1"
+}
+
+# =============================================================================
+# REQUIRED ENVIRONMENT VARIABLES
+# Set these before running the script
+# =============================================================================
+
+# Check for required environment variables
+if [ -z "${OPENAI_API_KEY:-}" ]; then
+    error "OPENAI_API_KEY environment variable is required"
+fi
+
+if [ -z "${REDIS_PASSWORD:-}" ]; then
+    error "REDIS_PASSWORD environment variable is required"
+fi
+
+# Configuration
+PROJECT_ID=${GCP_PROJECT_ID:-"your-project-id"}
+REGION=${GCP_REGION:-"us-central1"}
+ZONE=${GCP_ZONE:-"us-central1-a"}
+CLUSTER_NAME="nemo-guardrails-production"
+SERVICE_NAME="nemo-guardrails-secure"
+NAMESPACE="default"
+DOMAIN="api.garaksecurity.com"
+IMAGE_NAME="nemo-guardrails-secure"
+
+# Use environment variables for secrets
+OPENAI_API_KEY="${OPENAI_API_KEY}"
+REDIS_PASSWORD="${REDIS_PASSWORD}"
+
+log "🚀 Starting GCP Production Security Deployment"
+log "Project: $PROJECT_ID"
+log "Region: $REGION"
+log "Cluster: $CLUSTER_NAME"
+
+# Rest of the deployment script continues...
+# See original script for full implementation
