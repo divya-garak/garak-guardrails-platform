@@ -1,16 +1,24 @@
 # Garak Guardrails Platform
 
+> **⚠️ PROPRIETARY SOFTWARE - PUBLIC REPOSITORY**
+> 
+> This is a **public repository** containing **proprietary software** owned by Garak Inc.
+> While the code is publicly viewable for transparency and development purposes, it is NOT open source.
+> Production use requires a valid Garak Enterprise Edition subscription.
+
 Enterprise deployment of NeMo Guardrails with proprietary enhancements for production security and monitoring.
 
-## 📄 License
+## 📄 License Notice
 
-This software is licensed under the **Garak Guardrails Platform Enterprise Edition (EE) License**.
+**This is proprietary software licensed under the Garak Guardrails Platform Enterprise Edition (EE) License.**
 
-- **Proprietary Code**: All code outside of submodules is proprietary to Garak Inc. and requires a valid Enterprise subscription for production use.
-- **Open Source Components**: The `nemo-guardrails/` and `garak/` submodules retain their original Apache 2.0 licenses.
-- **Development Use**: You may copy and modify the Software for development and testing purposes without a subscription.
+- ❌ **NOT Open Source**: The code in this repository (except submodules) is proprietary to Garak Inc.
+- ✅ **Public Viewing**: Code is made publicly available for transparency, security auditing, and evaluation
+- 💼 **Commercial Use**: Requires a valid Enterprise subscription for production deployment
+- 🔬 **Development Use**: Free for development and testing purposes only
+- 📦 **Submodules**: `nemo-guardrails/` and `garak/` retain their original Apache 2.0 licenses
 
-See [LICENSE](LICENSE) for full terms. For licensing inquiries, contact legal@garaksecurity.com.
+See [LICENSE](LICENSE) for full legal terms. For licensing inquiries: legal@garaksecurity.com
 
 ## 🏗️ Architecture
 
@@ -28,7 +36,7 @@ This repository contains our proprietary deployment and configuration for NeMo G
 
 1. **Clone with submodules:**
    ```bash
-   git clone --recursive [your-private-repo-url]
+   git clone --recursive https://github.com/divya-garak/garak-guardrails-platform.git
    cd garak-guardrails-platform
    ```
 
@@ -144,14 +152,27 @@ The included NeMo-Guardrails submodule is licensed under Apache 2.0 by NVIDIA Co
 
 ## 🤝 Contributing
 
-This is a private repository. For contributions, please contact the maintainers.
+While this repository is public for transparency, contributions are managed internally by Garak Inc.
+For bug reports or security issues, please email: security@garaksecurity.com
 
 ## 📞 Support
 
-For issues or questions, please contact the platform team.
+- **Enterprise Support**: Available for licensed customers
+- **Documentation**: https://docs.garaksecurity.com
+- **Sales Inquiries**: sales@garaksecurity.com
+- **Security Issues**: security@garaksecurity.com
 
 ---
 
+## © Copyright Notice
+
+**Copyright (c) 2024 Garak Inc. All Rights Reserved.**
+
+This repository contains proprietary software owned by Garak Inc. The code is made publicly 
+available for transparency and evaluation purposes only. Any use in production requires a 
+valid Garak Enterprise Edition subscription.
+
 **Version**: 1.0.0  
-**Last Updated**: August 2025  
-**Maintainers**: Garak Security Team
+**Last Updated**: January 2025  
+**Maintainers**: Garak Security Team  
+**Repository**: https://github.com/divya-garak/garak-guardrails-platform
