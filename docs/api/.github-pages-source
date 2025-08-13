@@ -1,0 +1,2 @@
+This file indicates that documentation should be deployed via GitHub Actions, not Jekyll.
+See .github/workflows/deploy-docs.yml for the deployment configuration.
