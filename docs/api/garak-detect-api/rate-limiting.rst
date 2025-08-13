@@ -12,6 +12,12 @@ Rate Limits by Endpoint
    * - Endpoint
      - Method
      - Limit
+   * - ``/api/v1/info``
+     - GET
+     - 1000/minute
+   * - ``/api/v1/health``
+     - GET
+     - 1000/minute
    * - ``/api/v1/scans``
      - POST
      - 10/minute
@@ -21,21 +27,63 @@ Rate Limits by Endpoint
    * - ``/api/v1/scans/{id}``
      - GET
      - 200/minute
+   * - ``/api/v1/scans/{id}``
+     - PATCH
+     - 50/minute
+   * - ``/api/v1/scans/{id}``
+     - DELETE
+     - 20/minute
    * - ``/api/v1/scans/{id}/status``
      - GET
      - 300/minute
    * - ``/api/v1/scans/{id}/progress``
      - GET
      - 500/minute
+   * - ``/api/v1/scans/{id}/reports``
+     - GET
+     - 100/minute
    * - ``/api/v1/scans/{id}/reports/{type}``
      - GET
      - 50/minute
    * - ``/api/v1/generators``
      - GET
      - 100/minute
+   * - ``/api/v1/generators/{name}``
+     - GET
+     - 100/minute
+   * - ``/api/v1/generators/{name}/models``
+     - GET
+     - 100/minute
    * - ``/api/v1/probes``
      - GET
      - 100/minute
+   * - ``/api/v1/probes/{category}``
+     - GET
+     - 100/minute
+   * - ``/api/v1/admin/api-keys``
+     - POST
+     - 10/minute
+   * - ``/api/v1/admin/api-keys``
+     - GET
+     - 100/minute
+   * - ``/api/v1/admin/api-keys/{id}``
+     - GET
+     - 200/minute
+   * - ``/api/v1/admin/api-keys/{id}/revoke``
+     - POST
+     - 50/minute
+   * - ``/api/v1/admin/api-keys/{id}``
+     - DELETE
+     - 20/minute
+   * - ``/api/v1/admin/api-keys/{id}/rate-limit``
+     - GET
+     - 100/minute
+   * - ``/api/v1/generators/{name}/models``
+     - GET
+     - 100/minute
+   * - ``/api/v1/admin/stats``
+     - GET
+     - 50/minute
 
 Rate Limit Headers
 ------------------

@@ -108,6 +108,37 @@ Get Generator Details
         "supported_models": ["gpt-4", "gpt-3.5-turbo", "gpt-4o"]
       }
 
+Get Generator Models
+--------------------
+
+.. http:get:: /api/v1/generators/(str:generator_name)/models
+
+   Get all available models for a specific generator.
+
+   **Rate limit:** 100 requests/minute
+
+   .. code-block:: bash
+
+      curl -H "X-API-Key: your_api_key_here" \
+           https://garak-dashboard-765684604189.us-central1.run.app/api/v1/generators/openai/models
+
+   **Response:**
+
+   .. code-block:: json
+
+      {
+        "generator": "openai",
+        "models": [
+          "gpt-4",
+          "gpt-4-turbo", 
+          "gpt-4o",
+          "gpt-4o-mini",
+          "gpt-3.5-turbo",
+          "gpt-3.5-turbo-instruct"
+        ],
+        "total": 6
+      }
+
 Get Category Probes
 -------------------
 
