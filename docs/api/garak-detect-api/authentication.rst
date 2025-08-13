@@ -101,6 +101,7 @@ List API Keys
    List all API keys in the system.
 
    **Admin required:** Yes
+   
    **Rate limit:** 100/minute
 
    .. code-block:: bash
@@ -148,6 +149,7 @@ Get API Key Details
    Get details of a specific API key.
 
    **Admin required:** Yes
+   
    **Rate limit:** 200/minute
 
    .. code-block:: bash
@@ -180,6 +182,7 @@ Revoke API Key
    Revoke an API key (makes it unusable).
 
    **Admin required:** Yes
+   
    **Rate limit:** 50/minute
 
    .. code-block:: bash
@@ -196,6 +199,7 @@ Delete API Key
    Permanently delete an API key.
 
    **Admin required:** Yes
+   
    **Rate limit:** 20/minute
 
    .. code-block:: bash
@@ -212,6 +216,7 @@ Check Rate Limit Usage
    Get current rate limit usage for a specific API key.
 
    **Admin required:** Yes
+   
    **Rate limit:** 100/minute
 
    .. code-block:: bash
@@ -242,6 +247,7 @@ System Statistics
    Get system statistics and API usage metrics.
 
    **Admin required:** Yes
+   
    **Rate limit:** 50/minute
 
    .. code-block:: bash

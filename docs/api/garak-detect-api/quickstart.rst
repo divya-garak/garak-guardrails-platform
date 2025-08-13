@@ -39,6 +39,7 @@ Verify your API key works:
    Check API health status.
 
    **Authentication:** Optional
+   
    **Rate limit:** 1000/minute
 
    .. code-block:: bash
@@ -66,6 +67,7 @@ You can also check API information:
    Get API information and capabilities.
 
    **Authentication:** Not required
+   
    **Rate limit:** 1000/minute
 
    .. code-block:: bash
