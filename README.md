@@ -166,7 +166,7 @@ For bug reports or security issues, please email: security@garaksecurity.com
 
 ## © Copyright Notice
 
-**Copyright (c) 2024 Garak Inc. All Rights Reserved.**
+**Copyright (c) 2025 Garak Inc. All Rights Reserved.**
 
 This repository contains proprietary software owned by Garak Inc. The code is made publicly 
 available for transparency and evaluation purposes only. Any use in production requires a 
