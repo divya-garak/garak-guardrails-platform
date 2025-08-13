@@ -158,7 +158,7 @@ For bug reports or security issues, please email: security@garaksecurity.com
 ## 📞 Support
 
 - **Enterprise Support**: Available for licensed customers
-- **Documentation**: https://docs.garaksecurity.com
+- **Documentation**: https://docs.getgarak.com
 - **Sales Inquiries**: sales@garaksecurity.com
 - **Security Issues**: security@garaksecurity.com
 

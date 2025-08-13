@@ -1,6 +1,6 @@
 # Documentation Deployment Guide
 
-This guide explains how to deploy the Garak API documentation to https://docs.garaksecurity.com/.
+This guide explains how to deploy the Garak API documentation to https://docs.getgarak.com/.
 
 ## Automatic Deployment (GitHub Actions)
 
@@ -58,7 +58,7 @@ Values:
 
 1. After DNS propagation (can take up to 24 hours)
 2. Go to repository Settings → Pages
-3. Enter `docs.garaksecurity.com` in the custom domain field
+3. Enter `docs.getgarak.com` in the custom domain field
 4. Wait for DNS check to complete
 5. Enable "Enforce HTTPS"
 
@@ -117,7 +117,7 @@ docs/api/
 
 ### Google Cloud Storage
 1. Build documentation locally
-2. Upload to GCS bucket named `docs.garaksecurity.com`
+2. Upload to GCS bucket named `docs.getgarak.com`
 3. Configure bucket for static website hosting
 4. Set up Cloud CDN for HTTPS
 
