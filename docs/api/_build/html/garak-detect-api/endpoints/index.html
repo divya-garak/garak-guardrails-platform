@@ -1,0 +1,380 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API Endpoints Overview &mdash; Garak API 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=8d563738"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Scan Management" href="scan-management.html" />
+    <link rel="prev" title="API Keys Reference" href="../api-keys-reference.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Garak API
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Garak Detect API</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../authentication.html">Authentication</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../authentication.html#api-key-types">API Key Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../authentication.html#authentication-methods">Authentication Methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../authentication.html#header-authentication">Header Authentication</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../authentication.html#query-parameter-authentication">Query Parameter Authentication</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../authentication.html#bootstrap-setup">Bootstrap Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../authentication.html#creating-additional-keys">Creating Additional Keys</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../authentication.html#key-management">Key Management</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../authentication.html#list-api-keys">List API Keys</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../authentication.html#get-api-key-details">Get API Key Details</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../authentication.html#revoke-api-key">Revoke API Key</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../authentication.html#delete-api-key">Delete API Key</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../authentication.html#check-rate-limit-usage">Check Rate Limit Usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../authentication.html#system-statistics">System Statistics</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick Start</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#base-url">Base URL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#step-1-get-an-api-key">Step 1: Get an API Key</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#step-2-test-api-access">Step 2: Test API Access</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#step-3-discover-available-options">Step 3: Discover Available Options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#step-4-create-your-first-scan">Step 4: Create Your First Scan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#step-5-monitor-scan-progress">Step 5: Monitor Scan Progress</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#step-6-download-results">Step 6: Download Results</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#next-steps">Next Steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quickstart.html#common-issues">Common Issues</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api-keys-reference.html">API Keys Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../api-keys-reference.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api-keys-reference.html#api-key-field-names-by-generator">API Key Field Names by Generator</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api-keys-reference.html#required-api-keys">Required API Keys</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api-keys-reference.html#optional-local-generators">Optional/Local Generators</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api-keys-reference.html#usage-examples">Usage Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api-keys-reference.html#single-generator-example">Single Generator Example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api-keys-reference.html#multiple-generators-with-litellm">Multiple Generators with LiteLLM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api-keys-reference.html#local-generators-no-api-keys">Local Generators (No API Keys)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api-keys-reference.html#python-example">Python Example</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api-keys-reference.html#discovery">Discovery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api-keys-reference.html#common-issues">Common Issues</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api-keys-reference.html#see-also">See Also</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API Endpoints Overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="scan-management.html">Scan Management</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="scan-management.html#create-scan">Create Scan</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="scan-management.html#rest-generator-configuration">REST Generator Configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="scan-management.html#monitor-scan">Monitor Scan</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scan-management.html#get-results">Get Results</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scan-management.html#download-reports">Download Reports</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scan-management.html#list-scans">List Scans</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scan-management.html#manage-scans">Manage Scans</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scan-management.html#scan-states">Scan States</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scan-management.html#status-codes">Status Codes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scan-management.html#notes">Notes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="discovery.html">Discovery Endpoints</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="discovery.html#list-generators">List Generators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="discovery.html#list-probes">List Probes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="discovery.html#get-generator-details">Get Generator Details</a></li>
+<li class="toctree-l3"><a class="reference internal" href="discovery.html#get-generator-models">Get Generator Models</a></li>
+<li class="toctree-l3"><a class="reference internal" href="discovery.html#get-category-probes">Get Category Probes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="discovery.html#notes">Notes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reports.html">Report Management</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reports.html#list-reports">List Reports</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reports.html#download-json-report">Download JSON Report</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reports.html#download-html-report">Download HTML Report</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reports.html#download-jsonl-report">Download JSONL Report</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reports.html#download-hits-report">Download Hits Report</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reports.html#report-types">Report Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reports.html#status-codes">Status Codes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reports.html#notes">Notes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#quick-reference">Quick Reference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#core-endpoints">Core Endpoints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#rate-limits">Rate Limits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#http-status-codes">HTTP Status Codes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#error-format">Error Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#getting-started">Getting Started</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="scan-management.html">Scan Management</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="scan-management.html#create-scan">Create Scan</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="scan-management.html#rest-generator-configuration">REST Generator Configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="scan-management.html#monitor-scan">Monitor Scan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scan-management.html#get-results">Get Results</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scan-management.html#download-reports">Download Reports</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scan-management.html#list-scans">List Scans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scan-management.html#manage-scans">Manage Scans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scan-management.html#scan-states">Scan States</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scan-management.html#status-codes">Status Codes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scan-management.html#notes">Notes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="discovery.html">Discovery Endpoints</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="discovery.html#list-generators">List Generators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="discovery.html#list-probes">List Probes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="discovery.html#get-generator-details">Get Generator Details</a></li>
+<li class="toctree-l2"><a class="reference internal" href="discovery.html#get-generator-models">Get Generator Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="discovery.html#get-category-probes">Get Category Probes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="discovery.html#notes">Notes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="reports.html">Report Management</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reports.html#list-reports">List Reports</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reports.html#download-json-report">Download JSON Report</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reports.html#download-html-report">Download HTML Report</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reports.html#download-jsonl-report">Download JSONL Report</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reports.html#download-hits-report">Download Hits Report</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reports.html#report-types">Report Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reports.html#status-codes">Status Codes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reports.html#notes">Notes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../rate-limiting.html">Rate Limiting</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../rate-limiting.html#rate-limits-by-endpoint">Rate Limits by Endpoint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../rate-limiting.html#rate-limit-headers">Rate Limit Headers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../rate-limiting.html#check-rate-limit-status">Check Rate Limit Status</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../rate-limiting.html#usage-tips">Usage Tips</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../rate-limiting.html#rate-limit-exceeded">Rate Limit Exceeded</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../python-sdk.html">Python SDK</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../python-sdk.html#basic-usage">Basic Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python-sdk.html#example">Example</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Garak Protect API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../garak-protect-api/overview.html">Overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../garak-protect-api/overview.html#key-features">Key Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../garak-protect-api/overview.html#api-endpoints">API Endpoints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../garak-protect-api/overview.html#use-cases">Use Cases</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../garak-protect-api/quickstart.html">Quick Start</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../garak-protect-api/quickstart.html#base-url">Base URL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../garak-protect-api/quickstart.html#step-1-test-basic-connectivity">Step 1: Test Basic Connectivity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../garak-protect-api/quickstart.html#step-2-check-available-configurations">Step 2: Check Available Configurations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../garak-protect-api/quickstart.html#step-3-send-protected-chat-request">Step 3: Send Protected Chat Request</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../garak-protect-api/quickstart.html#step-4-test-guardrail-protection">Step 4: Test Guardrail Protection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../garak-protect-api/quickstart.html#next-steps">Next Steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../garak-protect-api/quickstart.html#common-use-cases">Common Use Cases</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../garak-protect-api/chat-completions.html">Chat Completions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../garak-protect-api/chat-completions.html#protected-chat-interface">Protected Chat Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../garak-protect-api/chat-completions.html#message-roles">Message Roles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../garak-protect-api/chat-completions.html#multi-turn-conversations">Multi-turn Conversations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../garak-protect-api/chat-completions.html#guardrail-protection-levels">Guardrail Protection Levels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../garak-protect-api/chat-completions.html#content-blocking">Content Blocking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../garak-protect-api/chat-completions.html#status-codes">Status Codes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../garak-protect-api/chat-completions.html#red-team-challenges">Red Team Challenges</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../garak-protect-api/chat-completions.html#best-practices">Best Practices</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../garak-protect-api/python-sdk.html">Python SDK</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../garak-protect-api/python-sdk.html#basic-usage">Basic Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../garak-protect-api/python-sdk.html#example-usage">Example Usage</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Garak API</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">API Endpoints Overview</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/garak-detect-api/endpoints/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="api-endpoints-overview">
+<h1>API Endpoints Overview<a class="headerlink" href="#api-endpoints-overview" title="Link to this heading"></a></h1>
+<p>RESTful endpoints for the Garak security scanning API.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="scan-management.html">Scan Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="discovery.html">Discovery Endpoints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reports.html">Report Management</a></li>
+</ul>
+</div>
+<section id="quick-reference">
+<h2>Quick Reference<a class="headerlink" href="#quick-reference" title="Link to this heading"></a></h2>
+<p><strong>Base URL:</strong> <code class="docutils literal notranslate"><span class="pre">https://garak-dashboard-765684604189.us-central1.run.app/api/v1</span></code></p>
+<p><strong>Authentication:</strong> <code class="docutils literal notranslate"><span class="pre">X-API-Key:</span> <span class="pre">your_api_key</span></code> (required for all endpoints)</p>
+<p><strong>Content-Type:</strong> <code class="docutils literal notranslate"><span class="pre">application/json</span></code></p>
+</section>
+<section id="core-endpoints">
+<h2>Core Endpoints<a class="headerlink" href="#core-endpoints" title="Link to this heading"></a></h2>
+<p><strong>Scan Management</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/api/v1/scans</span></code> - Create new security scan</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/api/v1/scans/{id}/progress</span></code> - Monitor scan progress</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/api/v1/scans/{id}/status</span></code> - Get scan status</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/api/v1/scans</span></code> - List your scans</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DELETE</span> <span class="pre">/api/v1/scans/{id}</span></code> - Cancel scan</p></li>
+</ul>
+<p><strong>Discovery</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/api/v1/generators</span></code> - List model providers</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/api/v1/probes</span></code> - List security probe categories</p></li>
+</ul>
+<p><strong>Reports</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/api/v1/scans/{id}/reports/json</span></code> - Download JSON report</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/api/v1/scans/{id}/reports/html</span></code> - Download HTML report</p></li>
+</ul>
+<p><strong>Admin &amp; System</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/api/v1/admin/bootstrap</span></code> - Create first admin API key (no auth required)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/api/v1/admin/api-keys</span></code> - Create new API key (admin required)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/api/v1/admin/api-keys</span></code> - List all API keys (admin required)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/api/v1/admin/api-keys/{id}</span></code> - Get API key details (admin required)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/api/v1/admin/api-keys/{id}/revoke</span></code> - Revoke API key (admin required)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DELETE</span> <span class="pre">/api/v1/admin/api-keys/{id}</span></code> - Delete API key (admin required)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/api/v1/health</span></code> - API health check (no auth required)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/api/v1/info</span></code> - API information (no auth required)</p></li>
+</ul>
+</section>
+<section id="rate-limits">
+<h2>Rate Limits<a class="headerlink" href="#rate-limits" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>Scan creation:</strong> 10/minute</p></li>
+<li><p><strong>Progress monitoring:</strong> 500/minute</p></li>
+<li><p><strong>Discovery:</strong> 100/minute</p></li>
+<li><p><strong>Reports:</strong> 50/minute</p></li>
+</ul>
+<p>Rate limit headers included in responses:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">X-RateLimit-Limit</span></code> - Maximum requests allowed per window</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">X-RateLimit-Remaining</span></code> - Requests remaining in current window</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">X-RateLimit-Reset</span></code> - Unix timestamp when limit resets</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">X-RateLimit-Window</span></code> - Window duration in seconds</p></li>
+</ul>
+</section>
+<section id="http-status-codes">
+<h2>HTTP Status Codes<a class="headerlink" href="#http-status-codes" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>200</strong> - Success</p></li>
+<li><p><strong>201</strong> - Scan created</p></li>
+<li><p><strong>400</strong> - Invalid request (check parameters)</p></li>
+<li><p><strong>401</strong> - Missing/invalid API key</p></li>
+<li><p><strong>404</strong> - Resource not found</p></li>
+<li><p><strong>429</strong> - Rate limit exceeded</p></li>
+<li><p><strong>500</strong> - Internal error</p></li>
+</ul>
+</section>
+<section id="error-format">
+<h2>Error Format<a class="headerlink" href="#error-format" title="Link to this heading"></a></h2>
+<p>All errors return consistent JSON:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;invalid_parameters&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Generator &#39;invalid&#39; not found. Use /api/v1/generators to see available options.&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="getting-started">
+<h2>Getting Started<a class="headerlink" href="#getting-started" title="Link to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p><strong>Get API Key:</strong> Use <code class="docutils literal notranslate"><span class="pre">/api/v1/admin/bootstrap</span></code> (first time) or get one from your admin</p></li>
+<li><p><strong>Discover Options:</strong> Check <code class="docutils literal notranslate"><span class="pre">/api/v1/generators</span></code> and <code class="docutils literal notranslate"><span class="pre">/api/v1/probes</span></code></p></li>
+<li><p><strong>Create Scan:</strong> Post to <code class="docutils literal notranslate"><span class="pre">/api/v1/scans</span></code> with your parameters</p></li>
+<li><p><strong>Monitor Progress:</strong> Poll <code class="docutils literal notranslate"><span class="pre">/api/v1/scans/{id}/progress</span></code> for updates</p></li>
+<li><p><strong>Download Results:</strong> Get reports from <code class="docutils literal notranslate"><span class="pre">/api/v1/scans/{id}/reports/{type}</span></code></p></li>
+</ol>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../api-keys-reference.html" class="btn btn-neutral float-left" title="API Keys Reference" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="scan-management.html" class="btn btn-neutral float-right" title="Scan Management" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Garak Inc.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

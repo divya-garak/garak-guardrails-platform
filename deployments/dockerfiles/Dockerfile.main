@@ -28,11 +28,18 @@ RUN pip install --no-cache-dir \
     spacy \
     && python -m spacy download en_core_web_sm
 
-# Copy the entire codebase
-COPY . .
+# Copy the NeMo Guardrails submodule
+COPY nemo-guardrails /app/nemo-guardrails
 
-# Install NeMo Guardrails in development mode
-RUN pip install -e .
+# Install NeMo Guardrails 
+RUN pip install -e /app/nemo-guardrails
+
+# Copy configuration and monitoring files
+COPY configs /app/configs
+COPY monitoring /app/monitoring
+
+# Set Python path to include app directory for monitoring module
+ENV PYTHONPATH="/app:${PYTHONPATH}"
 
 # Create directories for logs and config
 RUN mkdir -p /app/logs /app/config

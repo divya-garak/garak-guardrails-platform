@@ -1,5 +1,5 @@
-# Monitoring UI Dockerfile
-FROM python:3.10-slim
+# Dynamic Provider Monitoring Dockerfile
+FROM python:3.11-slim
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -10,20 +10,37 @@ RUN apt-get update && apt-get install -y \
 # Set working directory
 WORKDIR /app
 
-# Copy requirements and install dependencies
-COPY monitoring-ui/requirements.txt .
+# Install Python dependencies
 RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt
+    pip install --no-cache-dir \
+    fastapi \
+    uvicorn \
+    pydantic \
+    pyyaml \
+    requests \
+    streamlit \
+    flask \
+    aiohttp \
+    redis
 
-# Copy monitoring UI files
-COPY monitoring-ui/ .
+# Copy monitoring system files
+COPY monitoring/ /app/monitoring/
+COPY configs/ /app/configs/
+
+# Create non-root user
+RUN useradd -m -u 1000 monitor && \
+    chown -R monitor:monitor /app
+USER monitor
+
+# Create directories for dynamic provider data
+RUN mkdir -p /app/data/providers /app/logs
 
 # Expose ports
-EXPOSE 8501 8080
+EXPOSE 8090 8501
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
-    CMD curl -f http://localhost:8080/health || exit 1
+    CMD curl -f http://localhost:8090/health || exit 1
 
-# Default command (can be overridden)
-CMD ["python", "control_api.py"]
+# Default command - run control API
+CMD ["python", "-m", "monitoring.control_api"]

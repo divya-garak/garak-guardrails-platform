@@ -1,0 +1,46 @@
+# Example NeMo Guardrails configuration with dynamic provider references
+# This shows how to configure models using the dynamic provider system
+
+colang_version: "2.x"
+
+# Models can now reference dynamic provider configurations
+models:
+  # Traditional static configuration (still supported)
+  - type: main
+    engine: openai
+    model: gpt-3.5-turbo
+
+  # Dynamic provider reference - resolved at runtime
+  - type: main
+    provider_config_id: "my-anthropic-claude"
+    
+  # Another dynamic provider
+  - type: main 
+    provider_config_id: "my-azure-gpt4"
+
+# Rails configuration remains the same
+rails:
+  input:
+    flows: ["self check input"]
+  output:
+    flows: ["self check output"]
+
+# Instructions for the LLM
+instructions:
+  - type: general
+    content: |
+      Below is a task description that defines what you need to do.
+      Please read the task carefully and provide a helpful response.
+
+# Sample prompt templates  
+prompts:
+  - task: general
+    content: |-
+      {{ user_message }}
+
+# Configuration metadata
+metadata:
+  name: "Dynamic Provider Example"
+  description: "Example configuration showing dynamic provider usage"
+  version: "1.0.0"
+  supports_dynamic_providers: true

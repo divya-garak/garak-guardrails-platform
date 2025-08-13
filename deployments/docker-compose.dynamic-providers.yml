@@ -1,0 +1,144 @@
+version: '3.8'
+
+services:
+  # NeMo Guardrails service with dynamic provider support
+  nemo-guardrails:
+    build:
+      context: ../
+      dockerfile: deployments/dockerfiles/Dockerfile.main
+    ports:
+      - "8000:8000"
+    environment:
+      # Core environment
+      - NODE_ENV=${NODE_ENV:-production}
+      - COLANG_VERSION=2.x
+      
+      # Service endpoints
+      - JAILBREAK_DETECTION_ENDPOINT=http://jailbreak-detection:1337
+      # - PRESIDIO_ENDPOINT=http://presidio:5001  # Built into main service
+      # - CONTENT_SAFETY_ENDPOINT=http://content-safety:5002  # Built into main service
+      # - LLAMA_GUARD_ENDPOINT=http://llama-guard:8001  # Optional
+      
+      # Dynamic provider system
+      - ENABLE_DYNAMIC_PROVIDERS=true
+      - PROVIDER_CONFIG_PATH=/app/config/dynamic-providers
+      - PROVIDER_SYNC_INTERVAL=300  # 5 minutes
+      
+      # Legacy environment variables (still supported)
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - AZURE_OPENAI_API_KEY=${AZURE_OPENAI_API_KEY:-}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY:-}
+      
+    depends_on:
+      - provider-monitor
+      - jailbreak-detection
+    volumes:
+      - ../configs:/app/config:ro
+      - ../logs:/app/logs
+    command: ["nemoguardrails", "server", "--config", "/app/config/production/main", "--port", "8000"]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  # Provider monitoring and configuration service
+  provider-monitor:
+    build:
+      context: ../
+      dockerfile: deployments/dockerfiles/Dockerfile.monitoring
+    ports:
+      - "8090:8090"  # Control API
+      - "8501:8501"  # Streamlit Dashboard
+    environment:
+      - NODE_ENV=${NODE_ENV:-production}
+      - NEMO_CONFIG_PATH=/app/config/production/main/config.yml
+      - PROVIDER_DATA_PATH=/app/data/providers
+      - CORS_ALLOWED_ORIGINS=${CORS_ALLOWED_ORIGINS:-}
+      - CORS_ALLOW_CREDENTIALS=${CORS_ALLOW_CREDENTIALS:-false}
+    volumes:
+      - ../configs:/app/config:rw
+      - ../monitoring:/app/monitoring:ro
+      - ../logs:/app/logs
+      - provider_configs:/app/data/providers
+    command: ["python", "-m", "monitoring.control_api"]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8090/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  # Jailbreak Detection Service
+  jailbreak-detection:
+    build:
+      context: ../nemo-guardrails/nemoguardrails/library/jailbreak_detection
+      dockerfile: Dockerfile
+    ports:
+      - "1337:1337"
+    environment:
+      - JAILBREAK_CHECK_DEVICE=cpu
+      - NVIDIA_API_KEY=${NVIDIA_API_KEY:-}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:1337/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  # Note: Presidio and Content Safety are built into the main NeMo Guardrails service
+  # as library modules, not separate services
+
+  # Redis for caching and session storage
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-}
+    volumes:
+      - redis_data:/data
+    command: ["redis-server", "--requirepass", "${REDIS_PASSWORD:-defaultpassword}"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "--no-auth-warning", "-a", "${REDIS_PASSWORD:-defaultpassword}", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  # Nginx reverse proxy - commented out for local testing
+  # nginx:
+  #   build:
+  #     context: ../
+  #     dockerfile: deployments/dockerfiles/Dockerfile.nginx
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #   environment:
+  #     - NGINX_HOST=${NGINX_HOST:-localhost}
+  #     - CERTBOT_EMAIL=${CERTBOT_EMAIL:-}
+  #   volumes:
+  #     - ../nginx.conf:/etc/nginx/nginx.conf:ro
+  #     - nginx_certs:/etc/letsencrypt
+  #     - nginx_webroot:/var/www/certbot
+  #   depends_on:
+  #     - nemo-guardrails
+  #     - provider-monitor
+  #   restart: unless-stopped
+
+volumes:
+  redis_data:
+    driver: local
+  provider_configs:
+    driver: local
+  # nginx_certs:
+  #   driver: local
+  # nginx_webroot:
+  #   driver: local
+
+networks:
+  default:
+    name: nemo-guardrails-network
+    driver: bridge

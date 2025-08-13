@@ -1,7 +1,6 @@
 models:
   - type: main
-    engine: openai
-    model: gpt-3.5-turbo
+    provider_config_id: openai-main
 
 instructions:
   - type: general

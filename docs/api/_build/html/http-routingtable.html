@@ -1,0 +1,453 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Garak API &mdash; Garak API 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=8d563738"></script>
+      <script src="_static/doctools.js?v=9a2dae69"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+ 
+
+    <script>
+      DOCUMENTATION_OPTIONS.COLLAPSE_INDEX = true;
+    </script>
+
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Garak API
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Garak Detect API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="garak-detect-api/authentication.html">Authentication</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="garak-detect-api/authentication.html#api-key-types">API Key Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="garak-detect-api/authentication.html#authentication-methods">Authentication Methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="garak-detect-api/authentication.html#header-authentication">Header Authentication</a></li>
+<li class="toctree-l3"><a class="reference internal" href="garak-detect-api/authentication.html#query-parameter-authentication">Query Parameter Authentication</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="garak-detect-api/authentication.html#bootstrap-setup">Bootstrap Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="garak-detect-api/authentication.html#creating-additional-keys">Creating Additional Keys</a></li>
+<li class="toctree-l2"><a class="reference internal" href="garak-detect-api/authentication.html#key-management">Key Management</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="garak-detect-api/authentication.html#list-api-keys">List API Keys</a></li>
+<li class="toctree-l3"><a class="reference internal" href="garak-detect-api/authentication.html#get-api-key-details">Get API Key Details</a></li>
+<li class="toctree-l3"><a class="reference internal" href="garak-detect-api/authentication.html#revoke-api-key">Revoke API Key</a></li>
+<li class="toctree-l3"><a class="reference internal" href="garak-detect-api/authentication.html#delete-api-key">Delete API Key</a></li>
+<li class="toctree-l3"><a class="reference internal" href="garak-detect-api/authentication.html#check-rate-limit-usage">Check Rate Limit Usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="garak-detect-api/authentication.html#system-statistics">System Statistics</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="garak-detect-api/quickstart.html">Quick Start</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="garak-detect-api/quickstart.html#base-url">Base URL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="garak-detect-api/quickstart.html#step-1-get-an-api-key">Step 1: Get an API Key</a></li>
+<li class="toctree-l2"><a class="reference internal" href="garak-detect-api/quickstart.html#step-2-test-api-access">Step 2: Test API Access</a></li>
+<li class="toctree-l2"><a class="reference internal" href="garak-detect-api/quickstart.html#step-3-discover-available-options">Step 3: Discover Available Options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="garak-detect-api/quickstart.html#step-4-create-your-first-scan">Step 4: Create Your First Scan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="garak-detect-api/quickstart.html#step-5-monitor-scan-progress">Step 5: Monitor Scan Progress</a></li>
+<li class="toctree-l2"><a class="reference internal" href="garak-detect-api/quickstart.html#step-6-download-results">Step 6: Download Results</a></li>
+<li class="toctree-l2"><a class="reference internal" href="garak-detect-api/quickstart.html#next-steps">Next Steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="garak-detect-api/quickstart.html#common-issues">Common Issues</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="garak-detect-api/api-keys-reference.html">API Keys Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="garak-detect-api/api-keys-reference.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="garak-detect-api/api-keys-reference.html#api-key-field-names-by-generator">API Key Field Names by Generator</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="garak-detect-api/api-keys-reference.html#required-api-keys">Required API Keys</a></li>
+<li class="toctree-l3"><a class="reference internal" href="garak-detect-api/api-keys-reference.html#optional-local-generators">Optional/Local Generators</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="garak-detect-api/api-keys-reference.html#usage-examples">Usage Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="garak-detect-api/api-keys-reference.html#single-generator-example">Single Generator Example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="garak-detect-api/api-keys-reference.html#multiple-generators-with-litellm">Multiple Generators with LiteLLM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="garak-detect-api/api-keys-reference.html#local-generators-no-api-keys">Local Generators (No API Keys)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="garak-detect-api/api-keys-reference.html#python-example">Python Example</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="garak-detect-api/api-keys-reference.html#discovery">Discovery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="garak-detect-api/api-keys-reference.html#common-issues">Common Issues</a></li>
+<li class="toctree-l2"><a class="reference internal" href="garak-detect-api/api-keys-reference.html#see-also">See Also</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="garak-detect-api/endpoints/index.html">API Endpoints Overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="garak-detect-api/endpoints/scan-management.html">Scan Management</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="garak-detect-api/endpoints/scan-management.html#create-scan">Create Scan</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="garak-detect-api/endpoints/scan-management.html#rest-generator-configuration">REST Generator Configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="garak-detect-api/endpoints/scan-management.html#monitor-scan">Monitor Scan</a></li>
+<li class="toctree-l3"><a class="reference internal" href="garak-detect-api/endpoints/scan-management.html#get-results">Get Results</a></li>
+<li class="toctree-l3"><a class="reference internal" href="garak-detect-api/endpoints/scan-management.html#download-reports">Download Reports</a></li>
+<li class="toctree-l3"><a class="reference internal" href="garak-detect-api/endpoints/scan-management.html#list-scans">List Scans</a></li>
+<li class="toctree-l3"><a class="reference internal" href="garak-detect-api/endpoints/scan-management.html#manage-scans">Manage Scans</a></li>
+<li class="toctree-l3"><a class="reference internal" href="garak-detect-api/endpoints/scan-management.html#scan-states">Scan States</a></li>
+<li class="toctree-l3"><a class="reference internal" href="garak-detect-api/endpoints/scan-management.html#status-codes">Status Codes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="garak-detect-api/endpoints/scan-management.html#notes">Notes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="garak-detect-api/endpoints/discovery.html">Discovery Endpoints</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="garak-detect-api/endpoints/discovery.html#list-generators">List Generators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="garak-detect-api/endpoints/discovery.html#list-probes">List Probes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="garak-detect-api/endpoints/discovery.html#get-generator-details">Get Generator Details</a></li>
+<li class="toctree-l3"><a class="reference internal" href="garak-detect-api/endpoints/discovery.html#get-generator-models">Get Generator Models</a></li>
+<li class="toctree-l3"><a class="reference internal" href="garak-detect-api/endpoints/discovery.html#get-category-probes">Get Category Probes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="garak-detect-api/endpoints/discovery.html#notes">Notes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="garak-detect-api/endpoints/reports.html">Report Management</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="garak-detect-api/endpoints/reports.html#list-reports">List Reports</a></li>
+<li class="toctree-l3"><a class="reference internal" href="garak-detect-api/endpoints/reports.html#download-json-report">Download JSON Report</a></li>
+<li class="toctree-l3"><a class="reference internal" href="garak-detect-api/endpoints/reports.html#download-html-report">Download HTML Report</a></li>
+<li class="toctree-l3"><a class="reference internal" href="garak-detect-api/endpoints/reports.html#download-jsonl-report">Download JSONL Report</a></li>
+<li class="toctree-l3"><a class="reference internal" href="garak-detect-api/endpoints/reports.html#download-hits-report">Download Hits Report</a></li>
+<li class="toctree-l3"><a class="reference internal" href="garak-detect-api/endpoints/reports.html#report-types">Report Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="garak-detect-api/endpoints/reports.html#status-codes">Status Codes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="garak-detect-api/endpoints/reports.html#notes">Notes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="garak-detect-api/endpoints/index.html#quick-reference">Quick Reference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="garak-detect-api/endpoints/index.html#core-endpoints">Core Endpoints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="garak-detect-api/endpoints/index.html#rate-limits">Rate Limits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="garak-detect-api/endpoints/index.html#http-status-codes">HTTP Status Codes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="garak-detect-api/endpoints/index.html#error-format">Error Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="garak-detect-api/endpoints/index.html#getting-started">Getting Started</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="garak-detect-api/endpoints/scan-management.html">Scan Management</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="garak-detect-api/endpoints/scan-management.html#create-scan">Create Scan</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="garak-detect-api/endpoints/scan-management.html#rest-generator-configuration">REST Generator Configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="garak-detect-api/endpoints/scan-management.html#monitor-scan">Monitor Scan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="garak-detect-api/endpoints/scan-management.html#get-results">Get Results</a></li>
+<li class="toctree-l2"><a class="reference internal" href="garak-detect-api/endpoints/scan-management.html#download-reports">Download Reports</a></li>
+<li class="toctree-l2"><a class="reference internal" href="garak-detect-api/endpoints/scan-management.html#list-scans">List Scans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="garak-detect-api/endpoints/scan-management.html#manage-scans">Manage Scans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="garak-detect-api/endpoints/scan-management.html#scan-states">Scan States</a></li>
+<li class="toctree-l2"><a class="reference internal" href="garak-detect-api/endpoints/scan-management.html#status-codes">Status Codes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="garak-detect-api/endpoints/scan-management.html#notes">Notes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="garak-detect-api/endpoints/discovery.html">Discovery Endpoints</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="garak-detect-api/endpoints/discovery.html#list-generators">List Generators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="garak-detect-api/endpoints/discovery.html#list-probes">List Probes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="garak-detect-api/endpoints/discovery.html#get-generator-details">Get Generator Details</a></li>
+<li class="toctree-l2"><a class="reference internal" href="garak-detect-api/endpoints/discovery.html#get-generator-models">Get Generator Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="garak-detect-api/endpoints/discovery.html#get-category-probes">Get Category Probes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="garak-detect-api/endpoints/discovery.html#notes">Notes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="garak-detect-api/endpoints/reports.html">Report Management</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="garak-detect-api/endpoints/reports.html#list-reports">List Reports</a></li>
+<li class="toctree-l2"><a class="reference internal" href="garak-detect-api/endpoints/reports.html#download-json-report">Download JSON Report</a></li>
+<li class="toctree-l2"><a class="reference internal" href="garak-detect-api/endpoints/reports.html#download-html-report">Download HTML Report</a></li>
+<li class="toctree-l2"><a class="reference internal" href="garak-detect-api/endpoints/reports.html#download-jsonl-report">Download JSONL Report</a></li>
+<li class="toctree-l2"><a class="reference internal" href="garak-detect-api/endpoints/reports.html#download-hits-report">Download Hits Report</a></li>
+<li class="toctree-l2"><a class="reference internal" href="garak-detect-api/endpoints/reports.html#report-types">Report Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="garak-detect-api/endpoints/reports.html#status-codes">Status Codes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="garak-detect-api/endpoints/reports.html#notes">Notes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="garak-detect-api/rate-limiting.html">Rate Limiting</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="garak-detect-api/rate-limiting.html#rate-limits-by-endpoint">Rate Limits by Endpoint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="garak-detect-api/rate-limiting.html#rate-limit-headers">Rate Limit Headers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="garak-detect-api/rate-limiting.html#check-rate-limit-status">Check Rate Limit Status</a></li>
+<li class="toctree-l2"><a class="reference internal" href="garak-detect-api/rate-limiting.html#usage-tips">Usage Tips</a></li>
+<li class="toctree-l2"><a class="reference internal" href="garak-detect-api/rate-limiting.html#rate-limit-exceeded">Rate Limit Exceeded</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="garak-detect-api/python-sdk.html">Python SDK</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="garak-detect-api/python-sdk.html#basic-usage">Basic Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="garak-detect-api/python-sdk.html#example">Example</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Garak Protect API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="garak-protect-api/overview.html">Overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="garak-protect-api/overview.html#key-features">Key Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="garak-protect-api/overview.html#api-endpoints">API Endpoints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="garak-protect-api/overview.html#use-cases">Use Cases</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="garak-protect-api/quickstart.html">Quick Start</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="garak-protect-api/quickstart.html#base-url">Base URL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="garak-protect-api/quickstart.html#step-1-test-basic-connectivity">Step 1: Test Basic Connectivity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="garak-protect-api/quickstart.html#step-2-check-available-configurations">Step 2: Check Available Configurations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="garak-protect-api/quickstart.html#step-3-send-protected-chat-request">Step 3: Send Protected Chat Request</a></li>
+<li class="toctree-l2"><a class="reference internal" href="garak-protect-api/quickstart.html#step-4-test-guardrail-protection">Step 4: Test Guardrail Protection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="garak-protect-api/quickstart.html#next-steps">Next Steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="garak-protect-api/quickstart.html#common-use-cases">Common Use Cases</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="garak-protect-api/chat-completions.html">Chat Completions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="garak-protect-api/chat-completions.html#protected-chat-interface">Protected Chat Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="garak-protect-api/chat-completions.html#message-roles">Message Roles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="garak-protect-api/chat-completions.html#multi-turn-conversations">Multi-turn Conversations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="garak-protect-api/chat-completions.html#guardrail-protection-levels">Guardrail Protection Levels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="garak-protect-api/chat-completions.html#content-blocking">Content Blocking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="garak-protect-api/chat-completions.html#status-codes">Status Codes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="garak-protect-api/chat-completions.html#red-team-challenges">Red Team Challenges</a></li>
+<li class="toctree-l2"><a class="reference internal" href="garak-protect-api/chat-completions.html#best-practices">Best Practices</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="garak-protect-api/python-sdk.html">Python SDK</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="garak-protect-api/python-sdk.html#basic-usage">Basic Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="garak-protect-api/python-sdk.html#example-usage">Example Usage</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Garak API</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Garak API</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+
+   <h1>Garak API</h1>
+
+   <div class="modindex-jumpbox">
+   <a href="#cap-/api"><strong>/api</strong></a> | 
+   <a href="#cap-/health"><strong>/health</strong></a> | 
+   <a href="#cap-/v1"><strong>/v1</strong></a>
+   </div>
+
+   <table class="indextable modindextable">
+     <tr class="pcap"><td></td><td>&#160;</td><td></td></tr>
+     <tr class="cap" id="cap-/api"><td></td><td>
+       <strong>/api</strong></td><td></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="garak-detect-api/authentication.html#get--api-v1-admin-api-keys"><code class="xref">GET /api/v1/admin/api-keys</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="garak-detect-api/authentication.html#get--api-v1-admin-api-keys-(int-key_id)"><code class="xref">GET /api/v1/admin/api-keys/(int:key_id)</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="garak-detect-api/rate-limiting.html#get--api-v1-admin-api-keys-(int-key_id)-rate-limit"><code class="xref">GET /api/v1/admin/api-keys/(int:key_id)/rate-limit</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="garak-detect-api/authentication.html#get--api-v1-admin-stats"><code class="xref">GET /api/v1/admin/stats</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="garak-detect-api/quickstart.html#get--api-v1-generators"><code class="xref">GET /api/v1/generators</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="garak-detect-api/endpoints/discovery.html#get--api-v1-generators-(str-generator_name)"><code class="xref">GET /api/v1/generators/(str:generator_name)</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="garak-detect-api/endpoints/discovery.html#get--api-v1-generators-(str-generator_name)-models"><code class="xref">GET /api/v1/generators/(str:generator_name)/models</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="garak-detect-api/quickstart.html#get--api-v1-health"><code class="xref">GET /api/v1/health</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="garak-detect-api/quickstart.html#get--api-v1-info"><code class="xref">GET /api/v1/info</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="garak-detect-api/quickstart.html#get--api-v1-probes"><code class="xref">GET /api/v1/probes</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="garak-detect-api/endpoints/discovery.html#get--api-v1-probes-(str-category_name)"><code class="xref">GET /api/v1/probes/(str:category_name)</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="garak-detect-api/endpoints/scan-management.html#get--api-v1-scans"><code class="xref">GET /api/v1/scans</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="garak-detect-api/endpoints/scan-management.html#get--api-v1-scans-(str-scan_id)"><code class="xref">GET /api/v1/scans/(str:scan_id)</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="garak-detect-api/quickstart.html#get--api-v1-scans-(str-scan_id)-progress"><code class="xref">GET /api/v1/scans/(str:scan_id)/progress</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="garak-detect-api/endpoints/reports.html#get--api-v1-scans-(str-scan_id)-reports"><code class="xref">GET /api/v1/scans/(str:scan_id)/reports</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="garak-detect-api/endpoints/reports.html#get--api-v1-scans-(str-scan_id)-reports-hits"><code class="xref">GET /api/v1/scans/(str:scan_id)/reports/hits</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="garak-detect-api/quickstart.html#get--api-v1-scans-(str-scan_id)-reports-html"><code class="xref">GET /api/v1/scans/(str:scan_id)/reports/html</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="garak-detect-api/quickstart.html#get--api-v1-scans-(str-scan_id)-reports-json"><code class="xref">GET /api/v1/scans/(str:scan_id)/reports/json</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="garak-detect-api/endpoints/reports.html#get--api-v1-scans-(str-scan_id)-reports-jsonl"><code class="xref">GET /api/v1/scans/(str:scan_id)/reports/jsonl</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="garak-detect-api/quickstart.html#get--api-v1-scans-(str-scan_id)-status"><code class="xref">GET /api/v1/scans/(str:scan_id)/status</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="garak-detect-api/authentication.html#post--api-v1-admin-api-keys-(int-key_id)-revoke"><code class="xref">POST /api/v1/admin/api-keys/(int:key_id)/revoke</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="garak-detect-api/quickstart.html#post--api-v1-admin-bootstrap"><code class="xref">POST /api/v1/admin/bootstrap</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="garak-detect-api/quickstart.html#post--api-v1-scans"><code class="xref">POST /api/v1/scans</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="garak-detect-api/authentication.html#delete--api-v1-admin-api-keys-(int-key_id)"><code class="xref">DELETE /api/v1/admin/api-keys/(int:key_id)</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="garak-detect-api/endpoints/scan-management.html#delete--api-v1-scans-(str-scan_id)"><code class="xref">DELETE /api/v1/scans/(str:scan_id)</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="garak-detect-api/endpoints/scan-management.html#patch--api-v1-scans-(str-scan_id)"><code class="xref">PATCH /api/v1/scans/(str:scan_id)</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="pcap"><td></td><td>&#160;</td><td></td></tr>
+     <tr class="cap" id="cap-/health"><td></td><td>
+       <strong>/health</strong></td><td></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="garak-protect-api/quickstart.html#get--health"><code class="xref">GET /health</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="pcap"><td></td><td>&#160;</td><td></td></tr>
+     <tr class="cap" id="cap-/v1"><td></td><td>
+       <strong>/v1</strong></td><td></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="garak-protect-api/chat-completions.html#get--v1-challenges"><code class="xref">GET /v1/challenges</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="garak-protect-api/quickstart.html#get--v1-rails-configs"><code class="xref">GET /v1/rails/configs</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="garak-protect-api/quickstart.html#post--v1-chat-completions"><code class="xref">POST /v1/chat/completions</code></a></td><td>
+       <em></em></td></tr>
+   </table>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Garak Inc.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

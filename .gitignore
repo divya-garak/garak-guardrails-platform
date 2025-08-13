@@ -69,3 +69,7 @@ cache/
 
 # Detect Dashboard data
 detect-dashboard/data/
+
+# Documentation build output
+docs/api/_build/
+docs/_build/

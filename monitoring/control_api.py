@@ -19,8 +19,12 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import uvicorn
 
+# Import provider management system
+from .provider_api import provider_bp
+from .provider_extensions import provider_ext_bp
+
 # Configuration
-CONFIG_PATH = "/Users/divyachitimalla/NeMo-Guardrails/comprehensive-config/config.yml"
+CONFIG_PATH = os.getenv("NEMO_CONFIG_PATH", "/app/config/production/main/config.yml")
 SERVICES = {
     "main": "http://localhost:8000",
     "jailbreak": "http://localhost:1337", 
@@ -30,9 +34,13 @@ SERVICES = {
 
 app = FastAPI(
     title="NeMo Guardrails Control API",
-    description="Dynamic control and monitoring of guardrail services",
+    description="Dynamic control and monitoring of guardrail services with provider management",
     version="1.0.0"
 )
+
+# Register provider management blueprint
+app.include_router(provider_bp)
+app.include_router(provider_ext_bp)
 
 # CORS Security Configuration - Environment-based
 import os
@@ -295,7 +303,8 @@ async def root():
             "services": "/services",
             "config": "/config",
             "test": "/test",
-            "metrics": "/metrics"
+            "metrics": "/metrics",
+            "providers": "/api/providers"
         }
     }
 
@@ -415,9 +424,9 @@ async def reset_metrics():
 
 if __name__ == "__main__":
     uvicorn.run(
-        "control_api:app",
+        app,
         host="0.0.0.0",
         port=8090,
-        reload=True,
+        reload=False,
         log_level="info"
     )
