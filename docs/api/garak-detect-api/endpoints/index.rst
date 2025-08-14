@@ -13,7 +13,7 @@ RESTful endpoints for the Garak security scanning API.
 Quick Reference
 ---------------
 
-**Base URL:** ``https://garak-dashboard-765684604189.us-central1.run.app/api/v1``
+**Base URL:** ``https://scans.garaksecurity.com/api/v1``
 
 **Authentication:** ``X-API-Key: your_api_key`` (required for all endpoints)
 

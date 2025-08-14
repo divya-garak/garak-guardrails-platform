@@ -40,7 +40,7 @@ Example
 .. code-block:: python
 
    # Initialize client
-   api = GarakDetectAPI("https://garak-dashboard-765684604189.us-central1.run.app/api/v1", "your_api_key_here")
+   api = GarakDetectAPI("https://scans.garaksecurity.com/api/v1", "your_api_key_here")
 
    # Create scan
    scan_config = {

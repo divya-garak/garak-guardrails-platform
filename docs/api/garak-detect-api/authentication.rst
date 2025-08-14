@@ -23,11 +23,11 @@ Header Authentication
 
    # Authorization header
    curl -H "Authorization: Bearer your_api_key_here" \
-        https://garak-dashboard-765684604189.us-central1.run.app/api/v1/scans
+        https://scans.garaksecurity.com/api/v1/scans
 
    # X-API-Key header
    curl -H "X-API-Key: your_api_key_here" \
-        https://garak-dashboard-765684604189.us-central1.run.app/api/v1/scans
+        https://scans.garaksecurity.com/api/v1/scans
 
 Query Parameter Authentication
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -35,7 +35,7 @@ Query Parameter Authentication
 
 .. code-block:: bash
 
-   curl "https://garak-dashboard-765684604189.us-central1.run.app/api/v1/scans?api_key=your_api_key_here"
+   curl "https://scans.garaksecurity.com/api/v1/scans?api_key=your_api_key_here"
 
 Bootstrap Setup
 ---------------
@@ -44,7 +44,7 @@ For first-time setup, create an initial admin API key:
 
 .. code-block:: bash
 
-   curl -X POST https://garak-dashboard-765684604189.us-central1.run.app/api/v1/admin/bootstrap
+   curl -X POST https://scans.garaksecurity.com/api/v1/admin/bootstrap
 
 This endpoint is only available when no admin keys exist in the system.
 
@@ -77,7 +77,7 @@ Use your admin key to create additional keys with appropriate permissions:
 
 .. code-block:: bash
 
-   curl -X POST https://garak-dashboard-765684604189.us-central1.run.app/api/v1/admin/api-keys \
+   curl -X POST https://scans.garaksecurity.com/api/v1/admin/api-keys \
         -H "X-API-Key: your_admin_key" \
         -H "Content-Type: application/json" \
         -d '{
@@ -106,7 +106,7 @@ List API Keys
 
    .. code-block:: bash
 
-      curl -X GET https://garak-dashboard-765684604189.us-central1.run.app/api/v1/admin/api-keys \
+      curl -X GET https://scans.garaksecurity.com/api/v1/admin/api-keys \
            -H "X-API-Key: your_admin_key"
 
    **Response:**
@@ -155,7 +155,7 @@ Get API Key Details
    .. code-block:: bash
 
       # Replace 123 with the actual numeric ID of the API key
-      curl -X GET https://garak-dashboard-765684604189.us-central1.run.app/api/v1/admin/api-keys/123 \
+      curl -X GET https://scans.garaksecurity.com/api/v1/admin/api-keys/123 \
            -H "X-API-Key: your_admin_key"
 
 **Response:**
@@ -188,7 +188,7 @@ Revoke API Key
    .. code-block:: bash
 
       # Replace 123 with the actual numeric ID of the API key to revoke
-      curl -X POST https://garak-dashboard-765684604189.us-central1.run.app/api/v1/admin/api-keys/123/revoke \
+      curl -X POST https://scans.garaksecurity.com/api/v1/admin/api-keys/123/revoke \
            -H "X-API-Key: your_admin_key"
 
 Delete API Key
@@ -205,7 +205,7 @@ Delete API Key
    .. code-block:: bash
 
       # Replace 123 with the actual numeric ID of the API key to delete
-      curl -X DELETE https://garak-dashboard-765684604189.us-central1.run.app/api/v1/admin/api-keys/123 \
+      curl -X DELETE https://scans.garaksecurity.com/api/v1/admin/api-keys/123 \
            -H "X-API-Key: your_admin_key"
 
 Check Rate Limit Usage
@@ -222,7 +222,7 @@ Check Rate Limit Usage
    .. code-block:: bash
 
       # Replace 123 with the actual numeric ID of the API key
-      curl -X GET https://garak-dashboard-765684604189.us-central1.run.app/api/v1/admin/api-keys/123/rate-limit \
+      curl -X GET https://scans.garaksecurity.com/api/v1/admin/api-keys/123/rate-limit \
            -H "X-API-Key: your_admin_key"
 
    **Response:**
@@ -252,7 +252,7 @@ System Statistics
 
    .. code-block:: bash
 
-      curl -X GET https://garak-dashboard-765684604189.us-central1.run.app/api/v1/admin/stats \
+      curl -X GET https://scans.garaksecurity.com/api/v1/admin/stats \
            -H "X-API-Key: your_admin_key"
 
    **Response:**

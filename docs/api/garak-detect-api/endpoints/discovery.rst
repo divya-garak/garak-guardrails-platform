@@ -15,7 +15,7 @@ List Generators
    .. code-block:: bash
 
       curl -H "X-API-Key: your_api_key_here" \
-           https://garak-dashboard-765684604189.us-central1.run.app/api/v1/generators
+           https://scans.garaksecurity.com/api/v1/generators
 
    **Response:**
 
@@ -50,7 +50,7 @@ List Probes
    .. code-block:: bash
 
       curl -H "X-API-Key: your_api_key_here" \
-           https://garak-dashboard-765684604189.us-central1.run.app/api/v1/probes
+           https://scans.garaksecurity.com/api/v1/probes
 
    **Response:**
 
@@ -95,7 +95,7 @@ Get Generator Details
    .. code-block:: bash
 
       curl -H "X-API-Key: your_api_key_here" \
-           https://garak-dashboard-765684604189.us-central1.run.app/api/v1/generators/openai
+           https://scans.garaksecurity.com/api/v1/generators/openai
 
    **Response:**
 
@@ -120,7 +120,7 @@ Get Generator Models
    .. code-block:: bash
 
       curl -H "X-API-Key: your_api_key_here" \
-           https://garak-dashboard-765684604189.us-central1.run.app/api/v1/generators/openai/models
+           https://scans.garaksecurity.com/api/v1/generators/openai/models
 
    **Response:**
 
@@ -151,7 +151,7 @@ Get Category Probes
    .. code-block:: bash
 
       curl -H "X-API-Key: your_api_key_here" \
-           https://garak-dashboard-765684604189.us-central1.run.app/api/v1/probes/hallucination
+           https://scans.garaksecurity.com/api/v1/probes/hallucination
 
    **Response:**
 

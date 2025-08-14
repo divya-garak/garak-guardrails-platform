@@ -10,7 +10,7 @@ All API requests are made to:
 
 .. code-block:: text
 
-   https://garak-dashboard-765684604189.us-central1.run.app/api/v1
+   https://scans.garaksecurity.com/api/v1
 
 Step 1: Get an API Key
 ----------------------
@@ -25,7 +25,7 @@ Create your first admin API key:
 
    .. code-block:: bash
 
-      curl -X POST https://garak-dashboard-765684604189.us-central1.run.app/api/v1/admin/bootstrap
+      curl -X POST https://scans.garaksecurity.com/api/v1/admin/bootstrap
 
 Save the returned API key securely - you'll need it for all future requests.
 
@@ -45,7 +45,7 @@ Verify your API key works:
    .. code-block:: bash
 
       export API_KEY="your_api_key_here"
-      curl -H "X-API-Key: $API_KEY" https://garak-dashboard-765684604189.us-central1.run.app/api/v1/health
+      curl -H "X-API-Key: $API_KEY" https://scans.garaksecurity.com/api/v1/health
 
 Expected response:
 
@@ -72,7 +72,7 @@ You can also check API information:
 
    .. code-block:: bash
 
-      curl https://garak-dashboard-765684604189.us-central1.run.app/api/v1/info
+      curl https://scans.garaksecurity.com/api/v1/info
 
 **Response:**
 
@@ -101,7 +101,7 @@ List available model generators:
 
    .. code-block:: bash
 
-      curl -H "X-API-Key: $API_KEY" https://garak-dashboard-765684604189.us-central1.run.app/api/v1/generators
+      curl -H "X-API-Key: $API_KEY" https://scans.garaksecurity.com/api/v1/generators
 
 List available security probes:
 
@@ -113,7 +113,7 @@ List available security probes:
 
    .. code-block:: bash
 
-      curl -H "X-API-Key: $API_KEY" https://garak-dashboard-765684604189.us-central1.run.app/api/v1/probes
+      curl -H "X-API-Key: $API_KEY" https://scans.garaksecurity.com/api/v1/probes
 
 Step 4: Create Your First Scan
 -------------------------------
@@ -128,7 +128,7 @@ Create a security scan of GPT-2 for hallucination vulnerabilities:
 
    .. code-block:: bash
 
-      curl -X POST https://garak-dashboard-765684604189.us-central1.run.app/api/v1/scans \
+      curl -X POST https://scans.garaksecurity.com/api/v1/scans \
            -H "X-API-Key: $API_KEY" \
            -H "Content-Type: application/json" \
            -d '{
@@ -143,7 +143,7 @@ For models requiring API access, include the ``api_keys`` field:
 
 .. code-block:: bash
 
-   curl -X POST https://garak-dashboard-765684604189.us-central1.run.app/api/v1/scans \
+   curl -X POST https://scans.garaksecurity.com/api/v1/scans \
         -H "X-API-Key: $API_KEY" \
         -H "Content-Type: application/json" \
         -d '{
@@ -189,7 +189,7 @@ Check scan status (replace ``{scan_id}`` with your actual scan ID from Step 4):
    .. code-block:: bash
 
       curl -H "X-API-Key: $API_KEY" \
-           https://garak-dashboard-765684604189.us-central1.run.app/api/v1/scans/{scan_id}/status
+           https://scans.garaksecurity.com/api/v1/scans/{scan_id}/status
 
 Get detailed progress:
 
@@ -202,7 +202,7 @@ Get detailed progress:
    .. code-block:: bash
 
       curl -H "X-API-Key: $API_KEY" \
-           https://garak-dashboard-765684604189.us-central1.run.app/api/v1/scans/{scan_id}/progress
+           https://scans.garaksecurity.com/api/v1/scans/{scan_id}/progress
 
 Step 6: Download Results
 ------------------------
@@ -219,7 +219,7 @@ Once the scan completes, download the report:
 
       # JSON report
       curl -H "X-API-Key: $API_KEY" \
-           https://garak-dashboard-765684604189.us-central1.run.app/api/v1/scans/{scan_id}/reports/json \
+           https://scans.garaksecurity.com/api/v1/scans/{scan_id}/reports/json \
            -o scan_report.json
 
 .. http:get:: /api/v1/scans/(str:scan_id)/reports/html
@@ -232,7 +232,7 @@ Once the scan completes, download the report:
 
       # HTML report  
       curl -H "X-API-Key: $API_KEY" \
-           https://garak-dashboard-765684604189.us-central1.run.app/api/v1/scans/{scan_id}/reports/html \
+           https://scans.garaksecurity.com/api/v1/scans/{scan_id}/reports/html \
            -o scan_report.html
 
 Next Steps

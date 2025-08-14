@@ -21,7 +21,7 @@ Create Scan
 
    .. code-block:: bash
 
-      curl -X POST https://garak-dashboard-765684604189.us-central1.run.app/api/v1/scans \
+      curl -X POST https://scans.garaksecurity.com/api/v1/scans \
            -H "X-API-Key: your_api_key_here" \
            -H "Content-Type: application/json" \
            -d '{
@@ -90,7 +90,7 @@ The **rest** generator allows you to test any custom REST API endpoint that foll
 
 .. code-block:: bash
 
-   curl -X POST https://garak-dashboard-765684604189.us-central1.run.app/api/v1/scans \
+   curl -X POST https://scans.garaksecurity.com/api/v1/scans \
         -H "X-API-Key: your_api_key_here" \
         -H "Content-Type: application/json" \
         -d '{
@@ -104,7 +104,7 @@ The **rest** generator allows you to test any custom REST API endpoint that foll
 
 .. code-block:: bash
 
-   curl -X POST https://garak-dashboard-765684604189.us-central1.run.app/api/v1/scans \
+   curl -X POST https://scans.garaksecurity.com/api/v1/scans \
         -H "X-API-Key: your_api_key_here" \
         -H "Content-Type: application/json" \
         -d '{
@@ -121,7 +121,7 @@ The **rest** generator allows you to test any custom REST API endpoint that foll
 
 .. code-block:: bash
 
-   curl -X POST https://garak-dashboard-765684604189.us-central1.run.app/api/v1/scans \
+   curl -X POST https://scans.garaksecurity.com/api/v1/scans \
         -H "X-API-Key: your_api_key_here" \
         -H "Content-Type: application/json" \
         -d '{
@@ -138,7 +138,7 @@ The **rest** generator allows you to test any custom REST API endpoint that foll
 
 .. code-block:: bash
 
-   curl -X POST https://garak-dashboard-765684604189.us-central1.run.app/api/v1/scans \
+   curl -X POST https://scans.garaksecurity.com/api/v1/scans \
         -H "X-API-Key: your_api_key_here" \
         -H "Content-Type: application/json" \
         -d '{
@@ -160,7 +160,7 @@ Monitor Scan
    .. code-block:: bash
 
       curl -H "X-API-Key: your_api_key_here" \
-           https://garak-dashboard-765684604189.us-central1.run.app/api/v1/scans/{scan_id}/progress
+           https://scans.garaksecurity.com/api/v1/scans/{scan_id}/progress
 
    **Response:**
 
@@ -204,7 +204,7 @@ Get Results
    .. code-block:: bash
 
       curl -H "X-API-Key: your_api_key_here" \
-           https://garak-dashboard-765684604189.us-central1.run.app/api/v1/scans/{scan_id}
+           https://scans.garaksecurity.com/api/v1/scans/{scan_id}
 
 Download Reports
 ----------------
@@ -218,7 +218,7 @@ Download Reports
    .. code-block:: bash
 
       curl -H "X-API-Key: your_api_key_here" \
-           https://garak-dashboard-765684604189.us-central1.run.app/api/v1/scans/{scan_id}/reports/json \
+           https://scans.garaksecurity.com/api/v1/scans/{scan_id}/reports/json \
            -o report.json
 
 .. http:get:: /api/v1/scans/(str:scan_id)/reports/html
@@ -230,7 +230,7 @@ Download Reports
    .. code-block:: bash
 
       curl -H "X-API-Key: your_api_key_here" \
-           https://garak-dashboard-765684604189.us-central1.run.app/api/v1/scans/{scan_id}/reports/html \
+           https://scans.garaksecurity.com/api/v1/scans/{scan_id}/reports/html \
            -o report.html
 
 List Scans  
@@ -251,7 +251,7 @@ List Scans
    .. code-block:: bash
 
       curl -H "X-API-Key: your_api_key_here" \
-           "https://garak-dashboard-765684604189.us-central1.run.app/api/v1/scans?status=completed&per_page=50"
+           "https://scans.garaksecurity.com/api/v1/scans?status=completed&per_page=50"
 
 Manage Scans
 ------------
@@ -267,7 +267,7 @@ Manage Scans
       curl -X PATCH -H "X-API-Key: your_api_key_here" \
            -H "Content-Type: application/json" \
            -d '{"name": "Updated scan name"}' \
-           https://garak-dashboard-765684604189.us-central1.run.app/api/v1/scans/{scan_id}
+           https://scans.garaksecurity.com/api/v1/scans/{scan_id}
 
 .. http:delete:: /api/v1/scans/(str:scan_id)
 
@@ -278,7 +278,7 @@ Manage Scans
    .. code-block:: bash
 
       curl -X DELETE -H "X-API-Key: your_api_key_here" \
-           https://garak-dashboard-765684604189.us-central1.run.app/api/v1/scans/{scan_id}
+           https://scans.garaksecurity.com/api/v1/scans/{scan_id}
 
    .. note::
       Cancelled scans cannot be restarted.
