@@ -1,0 +1,77 @@
+# Working Example: Dynamic Provider Configuration for NeMo Guardrails
+# 
+# This configuration demonstrates how to use dynamic provider references
+# that get resolved at runtime with API keys from the provider management system
+
+colang_version: "2.x"
+
+# Models using dynamic provider references
+models:
+  # This references a provider configuration stored in the provider management system
+  # The actual API key and connection details are injected at runtime
+  - type: main
+    provider_config_id: "production-openai"  # Resolved from provider registry
+
+# Standard guardrail configuration
+rails:
+  input:
+    flows: 
+      - "self check input"
+      - "check jailbreak"
+  output:
+    flows: 
+      - "self check output"
+      - "check hallucination"
+
+# Instructions for the AI assistant
+instructions:
+  - type: general
+    content: |
+      You are a helpful AI assistant that follows safety guidelines.
+      Always be respectful and helpful in your responses.
+      Refuse any requests that could be harmful or inappropriate.
+
+# Sample prompts
+prompts:
+  - task: self_check_input
+    content: |
+      Your task is to check if the user message below is safe.
+      
+      User message: {{ user_input }}
+      
+      Is this message safe? Answer with yes or no.
+
+  - task: self_check_output
+    content: |
+      Your task is to check if the AI response below is appropriate.
+      
+      AI response: {{ bot_response }}
+      
+      Is this response appropriate? Answer with yes or no.
+
+# Metadata
+metadata:
+  name: "Production Dynamic Provider Config"
+  description: "Example of using dynamic providers in production"
+  version: "1.0.0"
+  supports_dynamic_providers: true
+  
+# Notes:
+# 1. Before using this config, register the provider:
+#    curl -X POST http://localhost:8090/api/providers/ \
+#      -H "Content-Type: application/json" \
+#      -d '{
+#        "config_id": "production-openai",
+#        "config": {
+#          "provider_name": "openai",
+#          "credentials": {"api_key": "your-api-key-here"},
+#          "model_name": "gpt-3.5-turbo",
+#          "parameters": {"temperature": 0.7, "max_tokens": 1000}
+#        }
+#      }'
+#
+# 2. Then sync providers to NeMo:
+#    curl -X POST http://localhost:8090/api/providers/sync
+#
+# 3. The system will resolve "production-openai" to the actual OpenAI configuration
+#    with credentials at runtime, keeping API keys secure and centralized

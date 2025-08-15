@@ -5,10 +5,12 @@ models:
   parameters:
     temperature: 0.7
     max_tokens: 1000
-    api_key: ${OPENAI_API_KEY}
+    api_key: [REDACTED_API_KEY]
 instructions:
 - type: general
-  content: You are a helpful AI assistant. Be concise and helpful.
+  content: 'You are a helpful AI assistant. Be concise and helpful.
+
+    '
 rails:
   input:
     flows:

@@ -1,0 +1,16 @@
+models:
+- type: main
+  provider_config_id: openai-main
+
+instructions:
+- type: general
+  content: 'You are a helpful AI assistant. Be concise and helpful.'
+
+rails:
+  input:
+    flows:
+    - self check input
+    - jailbreak detection heuristics
+  output:
+    flows:
+    - self check output

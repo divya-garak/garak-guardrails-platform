@@ -20,12 +20,23 @@ class NemoGuardrailsIntegration:
     
     def __init__(self, config_base_path: str = None):
         if config_base_path is None:
-            # Default to the main config location
-            config_base_path = "/Users/divyachitimalla/garak-guardrails-platform/configs/production/main"
+            # Default to the main config location - use container path in Docker
+            import os
+            if os.path.exists("/app/config"):
+                config_base_path = "/app/config/production/main"
+            else:
+                config_base_path = "/Users/divyachitimalla/garak-guardrails-platform/configs/production/main"
         
         self.config_base_path = Path(config_base_path)
         self.config_file = self.config_base_path / "config.yml"
         self.backup_config_file = self.config_base_path / "config.yml.backup"
+        
+        # Integration status attributes
+        self.enabled = True
+        self.config_path = str(self.config_file)
+        self.auto_reload = True
+        self.last_sync = None
+        self.synced_providers = set()
         
     def backup_current_config(self) -> bool:
         """Create a backup of the current configuration."""
@@ -80,6 +91,8 @@ class NemoGuardrailsIntegration:
     def apply_dynamic_providers(self) -> bool:
         """Apply dynamic provider configurations to NeMo Guardrails config."""
         try:
+            from datetime import datetime
+            
             # Backup current config
             self.backup_current_config()
             
@@ -89,10 +102,17 @@ class NemoGuardrailsIntegration:
             # Resolve dynamic providers
             resolved_config = resolve_dynamic_providers(config)
             
+            # Track synced providers
+            self.synced_providers.clear()
+            for model in config.get("models", []):
+                if isinstance(model, dict) and "provider_config_id" in model:
+                    self.synced_providers.add(model["provider_config_id"])
+            
             # Save the resolved configuration
             success = self.save_config(resolved_config)
             
             if success:
+                self.last_sync = datetime.now()
                 log.info("Dynamic providers successfully applied to NeMo Guardrails config")
                 return True
             else:
@@ -256,7 +276,7 @@ def sync_providers_to_nemo() -> bool:
 
 def add_provider_to_nemo(config_id: str) -> bool:
     """Add a dynamic provider to NeMo Guardrails configuration."""
-    return _integration.add_dynamic_provider_reference(config_id)
+    return _integration.add_dynamic_provider_reference(config_id, model_type="main")
 
 
 def remove_provider_from_nemo(config_id: str) -> bool:

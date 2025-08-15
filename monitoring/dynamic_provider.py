@@ -7,6 +7,7 @@ This module provides a system for dynamically configuring LLM providers
 with user-supplied API keys and settings via API endpoints.
 """
 
+import os
 import logging
 import json
 import redis
@@ -49,19 +50,42 @@ class DynamicProviderConfig(BaseModel):
 class ProviderManager:
     """Manages dynamic LLM provider configurations."""
     
-    def __init__(self, redis_host="redis", redis_port=6379, redis_password=None):
-        try:
-            self.redis_client = redis.Redis(
-                host=redis_host, 
-                port=redis_port, 
-                password=redis_password or "defaultpassword",
-                decode_responses=True
-            )
-            # Test the connection
-            self.redis_client.ping()
-            log.info("Connected to Redis for provider management")
-        except Exception as e:
-            log.warning(f"Failed to connect to Redis: {e}. Using in-memory storage.")
+    def __init__(self, redis_host=None, redis_port=6379, redis_password=None):
+        # Try different Redis connection options
+        redis_hosts_to_try = [
+            redis_host if redis_host else None,
+            os.getenv("REDIS_HOST", None),
+            "redis",  # Docker service name (try first in containers)
+            "deployments-redis-1",  # Docker compose service name
+            "localhost",
+            "127.0.0.1",
+            "redis-service"  # Kubernetes service name
+        ]
+        
+        connected = False
+        for host in redis_hosts_to_try:
+            if not host:
+                continue
+            try:
+                self.redis_client = redis.Redis(
+                    host=host, 
+                    port=redis_port, 
+                    password=redis_password or os.getenv("REDIS_PASSWORD", "defaultpassword"),
+                    decode_responses=True,
+                    socket_connect_timeout=1,
+                    socket_timeout=1
+                )
+                # Test the connection
+                self.redis_client.ping()
+                log.info(f"Connected to Redis at {host}:{redis_port} for provider management")
+                connected = True
+                break
+            except Exception as e:
+                log.debug(f"Failed to connect to Redis at {host}: {e}")
+                continue
+        
+        if not connected:
+            log.warning("Failed to connect to Redis at any host. Using in-memory storage.")
             self.redis_client = None
             self._providers: Dict[str, ProviderCredentials] = {}
             self._active_configs: Dict[str, DynamicProviderConfig] = {}

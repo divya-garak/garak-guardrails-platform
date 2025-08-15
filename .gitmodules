@@ -1,6 +1,0 @@
-[submodule "nemo-guardrails"]
-	path = nemo-guardrails
-	url = https://github.com/NVIDIA/NeMo-Guardrails.git
-[submodule "garak"]
-	path = garak
-	url = https://github.com/NVIDIA/garak.git

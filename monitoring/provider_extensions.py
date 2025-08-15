@@ -70,7 +70,7 @@ async def activate_provider(config_id: str):
                 }
             )
         
-        success = add_provider_to_nemo(config_id, provider_config)
+        success = add_provider_to_nemo(config_id)
         
         if success:
             return {
