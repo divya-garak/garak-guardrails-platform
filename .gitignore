@@ -3,6 +3,17 @@
 .env.*
 !.env.example
 
+# Forked repositories - ignore their git directories and build artifacts
+nemo-guardrails/__pycache__/
+nemo-guardrails/*.egg-info/
+nemo-guardrails/build/
+nemo-guardrails/dist/
+garak/__pycache__/
+garak/*.egg-info/
+garak/build/
+garak/dist/
+garak/garak_runs/
+
 # Secrets and credentials
 *.key
 *.pem
@@ -92,3 +103,7 @@ detect-dashboard/data/api_keys.db
 
 # Deployment scripts with hardcoded secrets
 deployments/k8s-deployments/scripts/deploy_gcp_production_security.sh
+
+# Temporary files and scripts
+tmp/
+temp/
